@@ -127,7 +127,7 @@ const filterTemplate = function () {
       </section>`;
 };
 
-const taskTemplete = function () {
+const taskTemplate = function () {
   return `<article class="card card--black">
             <div class="card__form">
               <div class="card__inner">
@@ -195,7 +195,7 @@ const taskTemplete = function () {
           </article>`;
 };
 
-const addTask = function () {
+const editTask = function () {
   return `<article class="card card--edit card--black">
             <form class="card__form" method="get">
               <div class="card__inner">
@@ -445,8 +445,8 @@ renderTemplate(menuContainer, boardContainer.outerHTML);
 renderTemplate(menuContainer.querySelector(`.board.container`), boardFilterTemplate(), `afterbegin`);
 renderTemplate(menuContainer.querySelector(`.board.container`), boardTaskContainer.outerHTML);
 
-for (let i = 0; i < 8; i++) {
-  renderTemplate(menuContainer.querySelector(`.board__tasks`), taskTemplete());
+for (let i = 0; i < 3; i++) {
+  renderTemplate(menuContainer.querySelector(`.board__tasks`), taskTemplate());
 }
-
+renderTemplate(menuContainer.querySelector(`.board__tasks`), editTask(), `afterbegin`);
 renderTemplate(menuContainer.querySelector(`.board.container`), loadMoreTemplate());
