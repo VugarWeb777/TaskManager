@@ -126,6 +126,64 @@ const boardTemplate = () => {
 
 /***/ }),
 
+/***/ "./src/components/data.js":
+/*!********************************!*\
+  !*** ./src/components/data.js ***!
+  \********************************/
+/*! exports provided: tasks */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tasks", function() { return tasks; });
+const getRandomNum = (min, max) => Math.floor(Math.random() * (max - min) + min);
+const randBoolean = ()=> Boolean(Math.round(Math.random()));
+
+const mixArray = (arr) => {
+  let newArr = arr.slice();
+
+  for (let i = 0; i < newArr.length; i++) {
+    let num = Math.floor(Math.random() * (i + 1));
+    [newArr[num],newArr[i]]=[newArr[i],newArr[num]]
+  }
+  return newArr;
+};
+
+const arrayRandomLength = (arr) => mixArray(arr).slice(0, getRandomNum(1, 4));
+
+const getTasks = ()=> ({
+  description: [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`][Math.floor(Math.random() * 3)],
+  dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 1000,
+  repeatingDays: {
+    Monday: false,
+    Tuesday: false,
+    Wednesday: false,
+    Thursday: false,
+    Friday: randBoolean(),
+    Saturday: false,
+    Sunday: false,
+  },
+  tags: new Set(arrayRandomLength([
+    `homework`,
+    `theory`,
+    `practice`,
+    `intensive`,
+    `learning`
+    ]
+  )),
+  color: [`black`, `yellow`, `blue`, `green`, `pink`][Math.floor(Math.random() * 5)],
+  isFavorite: true,
+  isArchive: false,
+});
+
+const tasks = new Array(3).fill(``).map(getTasks);
+
+
+
+
+
+/***/ }),
+
 /***/ "./src/components/filter.js":
 /*!**********************************!*\
   !*** ./src/components/filter.js ***!
@@ -301,13 +359,13 @@ const searchTemplate = function () {
 /*!*************************************!*\
   !*** ./src/components/task-edit.js ***!
   \*************************************/
-/*! exports provided: editTask */
+/*! exports provided: editTaskTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editTask", function() { return editTask; });
-const editTask = ()=> {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editTaskTemplate", function() { return editTaskTemplate; });
+const editTaskTemplate = ()=> {
   return `<article class="card card--edit card--black">
             <form class="card__form" method="get">
               <div class="card__inner">
@@ -544,8 +602,9 @@ const editTask = ()=> {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "taskTemplate", function() { return taskTemplate; });
-const taskTemplate = ()=> {
-  return `<article class="card card--black">
+const taskTemplate = ({description, dueDate, repeatingDays, tags, color})=> {
+  return `
+          <article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
             <div class="card__form">
               <div class="card__inner">
                 <div class="card__control">
@@ -570,7 +629,7 @@ const taskTemplate = ()=> {
                 </div>
 
                 <div class="card__textarea-wrap">
-                  <p class="card__text">Example default task with default color.</p>
+                  <p class="card__text">${description}</p>
                 </div>
 
                 <div class="card__settings">
@@ -578,7 +637,7 @@ const taskTemplate = ()=> {
                     <div class="card__dates">
                       <div class="card__date-deadline">
                         <p class="card__input-deadline-wrap">
-                          <span class="card__date">23 September</span>
+                          <span class="card__date">${new Date(dueDate).toDateString()}</span>
                           <span class="card__time">11:15 PM</span>
                         </p>
                       </div>
@@ -586,30 +645,21 @@ const taskTemplate = ()=> {
 
                     <div class="card__hashtag">
                       <div class="card__hashtag-list">
-                        <span class="card__hashtag-inner">
+                      ${Array.from(tags).map((tag)=> `
+                       <span class="card__hashtag-inner">
                           <span class="card__hashtag-name">
-                            #todo
+                            ${tag}
                           </span>
                         </span>
-
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #personal
-                          </span>
-                        </span>
-
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #important
-                          </span>
-                        </span>
+                      `).join(``)}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </article>`;
+          </article>
+`;
 };
 
 
@@ -627,11 +677,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/menu */ "./src/components/menu.js");
 /* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/search */ "./src/components/search.js");
 /* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/filter */ "./src/components/filter.js");
-/* harmony import */ var _components_task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/task */ "./src/components/task.js");
-/* harmony import */ var _components_task_edit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/task-edit */ "./src/components/task-edit.js");
-/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/load-more-button */ "./src/components/load-more-button.js");
-/* harmony import */ var _components_board_template__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/board-template */ "./src/components/board-template.js");
-/* harmony import */ var _components_board_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/board-filter */ "./src/components/board-filter.js");
+/* harmony import */ var _components_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/data */ "./src/components/data.js");
+/* harmony import */ var _components_task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/task */ "./src/components/task.js");
+/* harmony import */ var _components_task_edit__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/task-edit */ "./src/components/task-edit.js");
+/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/load-more-button */ "./src/components/load-more-button.js");
+/* harmony import */ var _components_board_template__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/board-template */ "./src/components/board-template.js");
+/* harmony import */ var _components_board_filter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/board-filter */ "./src/components/board-filter.js");
+
+
+
 
 
 
@@ -653,17 +707,20 @@ const mainContainer = document.querySelector(`.main`);
 renderTemplate(mainContainer.querySelector(`.main__control`), Object(_components_menu__WEBPACK_IMPORTED_MODULE_0__["menuTemplate"])());
 renderTemplate(mainContainer, Object(_components_search__WEBPACK_IMPORTED_MODULE_1__["searchTemplate"])());
 renderTemplate(mainContainer, Object(_components_filter__WEBPACK_IMPORTED_MODULE_2__["filterTemplate"])());
-renderTemplate(mainContainer, Object(_components_board_template__WEBPACK_IMPORTED_MODULE_6__["boardTemplate"])());
+renderTemplate(mainContainer, Object(_components_board_template__WEBPACK_IMPORTED_MODULE_7__["boardTemplate"])());
 
 const boardElement = mainContainer.querySelector(`.board`);
 const taskListElement = mainContainer.querySelector(`.board__tasks`);
 
-renderTemplate(boardElement, Object(_components_board_filter__WEBPACK_IMPORTED_MODULE_7__["boardFilterTemplate"])(), `afterBegin`);
-renderTemplate(taskListElement, Object(_components_task_edit__WEBPACK_IMPORTED_MODULE_4__["editTask"])(), `afterBegin`);
+renderTemplate(boardElement, Object(_components_board_filter__WEBPACK_IMPORTED_MODULE_8__["boardFilterTemplate"])(), `afterBegin`);
 
-new Array(3).fill(``).forEach(()=> renderTemplate(taskListElement, Object(_components_task__WEBPACK_IMPORTED_MODULE_3__["taskTemplate"])()));
 
-renderTemplate(boardElement, Object(_components_load_more_button__WEBPACK_IMPORTED_MODULE_5__["loadMoreTemplate"])());
+renderTemplate(boardElement, Object(_components_load_more_button__WEBPACK_IMPORTED_MODULE_6__["loadMoreTemplate"])());
+
+
+_components_data__WEBPACK_IMPORTED_MODULE_3__["tasks"].forEach((task) => {
+  taskListElement.insertAdjacentHTML(`beforeend`, Object(_components_task__WEBPACK_IMPORTED_MODULE_4__["taskTemplate"])(task));
+});
 
 
 

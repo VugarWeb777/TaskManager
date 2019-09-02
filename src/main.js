@@ -2,8 +2,11 @@ import {menuTemplate} from "./components/menu";
 import {searchTemplate} from "./components/search";
 
 import {filterTemplate} from "./components/filter";
+
+import {tasks} from "./components/data";
 import {taskTemplate} from "./components/task";
-import {editTask} from "./components/task-edit";
+import {editTaskTemplate} from "./components/task-edit";
+
 import {loadMoreTemplate} from "./components/load-more-button";
 
 import {boardTemplate} from "./components/board-template";
@@ -25,10 +28,13 @@ const boardElement = mainContainer.querySelector(`.board`);
 const taskListElement = mainContainer.querySelector(`.board__tasks`);
 
 renderTemplate(boardElement, boardFilterTemplate(), `afterBegin`);
-renderTemplate(taskListElement, editTask(), `afterBegin`);
 
-new Array(3).fill(``).forEach(()=> renderTemplate(taskListElement, taskTemplate()));
 
 renderTemplate(boardElement, loadMoreTemplate());
+
+
+tasks.forEach((task) => {
+  taskListElement.insertAdjacentHTML(`beforeend`, taskTemplate(task));
+});
 
 
