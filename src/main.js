@@ -3,7 +3,7 @@ import {searchTemplate} from "./components/search";
 
 import {filterTemplate} from "./components/filter";
 
-import {tasks} from "./components/data";
+import {tasks} from "./data";
 import {taskTemplate} from "./components/task";
 import {editTaskTemplate} from "./components/task-edit";
 
