@@ -1,4 +1,4 @@
-export const taskTemplate = ({description, dueDate, repeatingDays, tags, color})=> {
+export const taskTemplate = ({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive})=> {
   return `
           <article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
             <div class="card__form">
@@ -7,12 +7,12 @@ export const taskTemplate = ({description, dueDate, repeatingDays, tags, color})
                   <button type="button" class="card__btn card__btn--edit">
                     edit
                   </button>
-                  <button type="button" class="card__btn card__btn--archive">
+                 <button type="button" class="card__btn  card__btn--${isArchive ? `` : `disabled`}">
                     archive
                   </button>
                   <button
                     type="button"
-                    class="card__btn card__btn--favorites card__btn--disabled"
+                    class="card__btn card__btn--favorites card__btn--${isFavorite ? `` : `disabled`}"
                   >
                     favorites
                   </button>
@@ -34,7 +34,7 @@ export const taskTemplate = ({description, dueDate, repeatingDays, tags, color})
                       <div class="card__date-deadline">
                         <p class="card__input-deadline-wrap">
                           <span class="card__date">${new Date(dueDate).toDateString()}</span>
-                          <span class="card__time">11:15 PM</span>
+                          <span class="card__time">${new Date(dueDate).getHours()} : ${new Date(dueDate).getMinutes()}</span>
                         </p>
                       </div>
                     </div>
