@@ -96,14 +96,9 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "boardFilterTemplate", function() { return boardFilterTemplate; });
-const boardFilterTemplate = ()=> {
-  return `<div class="board__filter-list">
-          <a href="#" class="board__filter">SORT BY DEFAULT</a>
-          <a href="#" class="board__filter">SORT BY DATE up</a>
-          <a href="#" class="board__filter">SORT BY DATE down</a>
-        </div>`;
+var boardFilterTemplate = function boardFilterTemplate() {
+  return "<div class=\"board__filter-list\">\n          <a href=\"#\" class=\"board__filter\">SORT BY DEFAULT</a>\n          <a href=\"#\" class=\"board__filter\">SORT BY DATE up</a>\n          <a href=\"#\" class=\"board__filter\">SORT BY DATE down</a>\n        </div>";
 };
-
 
 /***/ }),
 
@@ -117,12 +112,9 @@ const boardFilterTemplate = ()=> {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "boardTemplate", function() { return boardTemplate; });
-const boardTemplate = () => {
-  return `<section class="board container">
-      <div class="board__tasks"></div>
-    </section>`;
+var boardTemplate = function boardTemplate() {
+  return "<section class=\"board container\">\n      <div class=\"board__tasks\"></div>\n    </section>";
 };
-
 
 /***/ }),
 
@@ -136,26 +128,17 @@ const boardTemplate = () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filterTemplate", function() { return filterTemplate; });
-const getFilter = ({title, count}) => {
-  return `
-      ${`<input type="radio" id="filter__${title}" 
-      class="filter__input visually-hidden" 
-      name="filter" 
-      checked="">
-      <label for="filter__all" class="filter__label">${title}
-      <span class="filter__all-count">${count}</span>
-      </label>`}
- `;
+var getFilter = function getFilter(_ref) {
+  var title = _ref.title,
+      count = _ref.count;
+  return "\n      ".concat("<input type=\"radio\" id=\"filter__".concat(title, "\" \n      class=\"filter__input visually-hidden\" \n      name=\"filter\" \n      checked=\"\">\n      <label for=\"filter__all\" class=\"filter__label\">").concat(title, "\n      <span class=\"filter__all-count\">").concat(count, "</span>\n      </label>"), "\n ");
 };
 
-const filterTemplate = (filters) => {
-  return `
-    <section class="main__filter filter container"> 
-      ${filters.map((filter) => getFilter(filter)).join(``)}
-    </section>
-  `;
+var filterTemplate = function filterTemplate(filters) {
+  return "\n    <section class=\"main__filter filter container\"> \n      ".concat(filters.map(function (filter) {
+    return getFilter(filter);
+  }).join(""), "\n    </section>\n  ");
 };
-
 
 /***/ }),
 
@@ -169,10 +152,9 @@ const filterTemplate = (filters) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadMoreTemplate", function() { return loadMoreTemplate; });
-const loadMoreTemplate = ()=> {
-  return `<button class="load-more" type="button">load more</button>`;
+var loadMoreTemplate = function loadMoreTemplate() {
+  return "<button class=\"load-more\" type=\"button\">load more</button>";
 };
-
 
 /***/ }),
 
@@ -186,37 +168,9 @@ const loadMoreTemplate = ()=> {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "menuTemplate", function() { return menuTemplate; });
-const menuTemplate = ()=> {
-  return `<section class="control__btn-wrap">
-          <input
-            type="radio"
-            name="control"
-            id="control__new-task"
-            class="control__input visually-hidden"
-          />
-          <label for="control__new-task" class="control__label control__label--new-task"
-            >+ ADD NEW TASK</label
-          >
-          <input
-            type="radio"
-            name="control"
-            id="control__task"
-            class="control__input visually-hidden"
-            checked
-          />
-          <label for="control__task" class="control__label">TASKS</label>
-          <input
-            type="radio"
-            name="control"
-            id="control__statistic"
-            class="control__input visually-hidden"
-          />
-          <label for="control__statistic" class="control__label"
-            >STATISTICS</label
-          >
-        </section>`;
+var menuTemplate = function menuTemplate() {
+  return "<section class=\"control__btn-wrap\">\n          <input\n            type=\"radio\"\n            name=\"control\"\n            id=\"control__new-task\"\n            class=\"control__input visually-hidden\"\n          />\n          <label for=\"control__new-task\" class=\"control__label control__label--new-task\"\n            >+ ADD NEW TASK</label\n          >\n          <input\n            type=\"radio\"\n            name=\"control\"\n            id=\"control__task\"\n            class=\"control__input visually-hidden\"\n            checked\n          />\n          <label for=\"control__task\" class=\"control__label\">TASKS</label>\n          <input\n            type=\"radio\"\n            name=\"control\"\n            id=\"control__statistic\"\n            class=\"control__input visually-hidden\"\n          />\n          <label for=\"control__statistic\" class=\"control__label\"\n            >STATISTICS</label\n          >\n        </section>";
 };
-
 
 /***/ }),
 
@@ -230,19 +184,9 @@ const menuTemplate = ()=> {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchTemplate", function() { return searchTemplate; });
-const searchTemplate = function () {
-  return `<section class="main__search search container">
-        <input
-          type="text"
-          id="search__input"
-          class="search__input"
-          placeholder="START TYPING — SEARCH BY WORD, #HASHTAG OR DATE"
-          value="#work"
-        />
-        <label class="visually-hidden" for="search__input">Поиск</label>
-      </section>`;
+var searchTemplate = function searchTemplate() {
+  return "<section class=\"main__search search container\">\n        <input\n          type=\"text\"\n          id=\"search__input\"\n          class=\"search__input\"\n          placeholder=\"START TYPING \u2014 SEARCH BY WORD, #HASHTAG OR DATE\"\n          value=\"#work\"\n        />\n        <label class=\"visually-hidden\" for=\"search__input\">\u041F\u043E\u0438\u0441\u043A</label>\n      </section>";
 };
-
 
 /***/ }),
 
@@ -256,142 +200,24 @@ const searchTemplate = function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editTaskTemplate", function() { return editTaskTemplate; });
-const editTaskTemplate = ({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) => {
-  return `
-    <article class="card card--edit card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
-      <form class="card__form" method="get">
-        <div class="card__inner">
-          <div class="card__control">
-            <button type="button" class="card__btn card__btn--${isArchive ? `` : `disabled`}">
-              archive
-            </button>
-            <button
-              type="button"
-              class="card__btn card__btn--favorites card__btn--${isFavorite ? `` : `disabled`}"
-            >
-              favorites
-            </button>
-          </div>
-    
-          <div class="card__color-bar">
-            <svg class="card__color-bar-wave" width="100%" height="10">
-              <use xlink:href="#wave"></use>
-            </svg>
-          </div>
-    
-          <div class="card__textarea-wrap">
-            <label>
-              <textarea
-                class="card__text"
-                placeholder="Start typing your text here..."
-                name="text"
-              >${description}</textarea>
-            </label>
-          </div>
-    
-          <div class="card__settings">
-            <div class="card__details">
-              <div class="card__dates">
-                <button class="card__date-deadline-toggle" type="button">
-                  date: <span class="card__date-status">yes</span>
-                </button>
-    
-                <fieldset class="card__date-deadline">
-                  <label class="card__input-deadline-wrap">
-                    <input
-                      class="card__date"
-                      type="text"
-                      placeholder=""
-                      name="date"
-                      value="${new Date(dueDate).toDateString()}"
-                    />
-                  </label>
-                </fieldset>
-    
-                <button class="card__repeat-toggle" type="button">
-                  repeat:<span class="card__repeat-status">${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `yes` : `no`}</span>
-                </button>
-    
-                <fieldset class="card__repeat-days">
-                  <div class="card__repeat-days-inner">
-                    ${Object.keys(repeatingDays).map((day)=> `
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-${day}-4"
-                      name="repeat"
-                      value="${day}"
-                      ${(repeatingDays[day]) ? `checked` : ``}
-                    />
-                    <label class="card__repeat-day" for="repeat-${day}-4"
-                      >${day}</label
-                    >                  
-                    `).join(``)}
-                  </div>
-                </fieldset>
-              </div>
-    
-              <div class="card__hashtag">
-                <div class="card__hashtag-list">
-                ${Array.from(tags).map((tag)=> `
-                <span class="card__hashtag-inner">
-                  <input
-                    type="hidden"
-                    name="hashtag"
-                    value="repeat"
-                    class="card__hashtag-hidden-input"
-                  />
-                  <p class="card__hashtag-name">
-                    #${tag}
-                  </p>
-                  <button type="button" class="card__hashtag-delete">
-                    delete
-                  </button>
-                </span>
-               `).join(``)}
-                </div>
-    
-                <label>
-                  <input
-                    type="text"
-                    class="card__hashtag-input"
-                    name="hashtag-input"
-                    placeholder="Type new hashtag here"
-                  />
-                </label>
-              </div>
-            </div>
-    
-            <div class="card__colors-inner">
-              <h3 class="card__colors-title">Color</h3>
-              <div class="card__colors-wrap">
-                <input
-                type="radio"
-                id="color-${color}-4"
-                class="card__color-input card__color-input--${color} visually-hidden"
-                name="color"
-                value="${color}"
-                checked
-                />
-                <label
-                  for="color-black-4"
-                  class="card__color card__color--${color}"
-                  >${color}</label
-                >
-              </div>
-            </div>
-          </div>
-    
-          <div class="card__status-btns">
-            <button class="card__save" type="submit">save</button>
-            <button class="card__delete" type="button">delete</button>
-          </div>
-        </div>
-      </form>
-    </article>    
-  `;
+var editTaskTemplate = function editTaskTemplate(_ref) {
+  var description = _ref.description,
+      dueDate = _ref.dueDate,
+      repeatingDays = _ref.repeatingDays,
+      tags = _ref.tags,
+      color = _ref.color,
+      isFavorite = _ref.isFavorite,
+      isArchive = _ref.isArchive;
+  return "\n    <article class=\"card card--edit card--".concat(color, " ").concat(Object.keys(repeatingDays).some(function (day) {
+    return repeatingDays[day];
+  }) ? "card--repeat" : "", "\">\n      <form class=\"card__form\" method=\"get\">\n        <div class=\"card__inner\">\n          <div class=\"card__control\">\n            <button type=\"button\" class=\"card__btn card__btn--").concat(isArchive ? "" : "disabled", "\">\n              archive\n            </button>\n            <button\n              type=\"button\"\n              class=\"card__btn card__btn--favorites card__btn--").concat(isFavorite ? "" : "disabled", "\"\n            >\n              favorites\n            </button>\n          </div>\n    \n          <div class=\"card__color-bar\">\n            <svg class=\"card__color-bar-wave\" width=\"100%\" height=\"10\">\n              <use xlink:href=\"#wave\"></use>\n            </svg>\n          </div>\n    \n          <div class=\"card__textarea-wrap\">\n            <label>\n              <textarea\n                class=\"card__text\"\n                placeholder=\"Start typing your text here...\"\n                name=\"text\"\n              >").concat(description, "</textarea>\n            </label>\n          </div>\n    \n          <div class=\"card__settings\">\n            <div class=\"card__details\">\n              <div class=\"card__dates\">\n                <button class=\"card__date-deadline-toggle\" type=\"button\">\n                  date: <span class=\"card__date-status\">yes</span>\n                </button>\n    \n                <fieldset class=\"card__date-deadline\">\n                  <label class=\"card__input-deadline-wrap\">\n                    <input\n                      class=\"card__date\"\n                      type=\"text\"\n                      placeholder=\"\"\n                      name=\"date\"\n                      value=\"").concat(new Date(dueDate).toDateString(), "\"\n                    />\n                  </label>\n                </fieldset>\n    \n                <button class=\"card__repeat-toggle\" type=\"button\">\n                  repeat:<span class=\"card__repeat-status\">").concat(Object.keys(repeatingDays).some(function (day) {
+    return repeatingDays[day];
+  }) ? "yes" : "no", "</span>\n                </button>\n    \n                <fieldset class=\"card__repeat-days\">\n                  <div class=\"card__repeat-days-inner\">\n                    ").concat(Object.keys(repeatingDays).map(function (day) {
+    return "\n                    <input\n                      class=\"visually-hidden card__repeat-day-input\"\n                      type=\"checkbox\"\n                      id=\"repeat-".concat(day, "-4\"\n                      name=\"repeat\"\n                      value=\"").concat(day, "\"\n                      ").concat(repeatingDays[day] ? "checked" : "", "\n                    />\n                    <label class=\"card__repeat-day\" for=\"repeat-").concat(day, "-4\"\n                      >").concat(day, "</label\n                    >                  \n                    ");
+  }).join(""), "\n                  </div>\n                </fieldset>\n              </div>\n    \n              <div class=\"card__hashtag\">\n                <div class=\"card__hashtag-list\">\n                ").concat(Array.from(tags).map(function (tag) {
+    return "\n                <span class=\"card__hashtag-inner\">\n                  <input\n                    type=\"hidden\"\n                    name=\"hashtag\"\n                    value=\"repeat\"\n                    class=\"card__hashtag-hidden-input\"\n                  />\n                  <p class=\"card__hashtag-name\">\n                    #".concat(tag, "\n                  </p>\n                  <button type=\"button\" class=\"card__hashtag-delete\">\n                    delete\n                  </button>\n                </span>\n               ");
+  }).join(""), "\n                </div>\n    \n                <label>\n                  <input\n                    type=\"text\"\n                    class=\"card__hashtag-input\"\n                    name=\"hashtag-input\"\n                    placeholder=\"Type new hashtag here\"\n                  />\n                </label>\n              </div>\n            </div>\n    \n            <div class=\"card__colors-inner\">\n              <h3 class=\"card__colors-title\">Color</h3>\n              <div class=\"card__colors-wrap\">\n                <input\n                type=\"radio\"\n                id=\"color-").concat(color, "-4\"\n                class=\"card__color-input card__color-input--").concat(color, " visually-hidden\"\n                name=\"color\"\n                value=\"").concat(color, "\"\n                checked\n                />\n                <label\n                  for=\"color-black-4\"\n                  class=\"card__color card__color--").concat(color, "\"\n                  >").concat(color, "</label\n                >\n              </div>\n            </div>\n          </div>\n    \n          <div class=\"card__status-btns\">\n            <button class=\"card__save\" type=\"submit\">save</button>\n            <button class=\"card__delete\" type=\"button\">delete</button>\n          </div>\n        </div>\n      </form>\n    </article>    \n  ");
 };
-
 
 /***/ }),
 
@@ -399,72 +225,53 @@ const editTaskTemplate = ({description, dueDate, repeatingDays, tags, color, isF
 /*!********************************!*\
   !*** ./src/components/task.js ***!
   \********************************/
-/*! exports provided: taskTemplate */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "taskTemplate", function() { return taskTemplate; });
-const taskTemplate = ({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive})=> {
-  return `
-          <article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
-            <div class="card__form">
-              <div class="card__inner">
-                <div class="card__control">
-                  <button type="button" class="card__btn card__btn--edit">
-                    edit
-                  </button>
-                 <button type="button" class="card__btn  card__btn--${isArchive ? `` : `disabled`}">
-                    archive
-                  </button>
-                  <button
-                    type="button"
-                    class="card__btn card__btn--favorites card__btn--${isFavorite ? `` : `disabled`}"
-                  >
-                    favorites
-                  </button>
-                </div>
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-                <div class="card__color-bar">
-                  <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-                <div class="card__textarea-wrap">
-                  <p class="card__text">${description}</p>
-                </div>
+var Task = function Task(description, dueDate, repeatingDays, tags, color, isFavorite, isArchive) {
+  var _this = this;
 
-                <div class="card__settings">
-                  <div class="card__details">
-                    <div class="card__dates">
-                      <div class="card__date-deadline">
-                        <p class="card__input-deadline-wrap">
-                          <span class="card__date">${new Date(dueDate).toDateString()}</span>
-                          <span class="card__time">${new Date(dueDate).getHours()} : ${new Date(dueDate).getMinutes()}</span>
-                        </p>
-                      </div>
-                    </div>
+  _classCallCheck(this, Task);
 
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                      ${Array.from(tags).map((tag)=> `
-                       <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            ${tag}
-                          </span>
-                        </span>
-                      `).join(``)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-`;
+  _defineProperty(this, "description", void 0);
+
+  _defineProperty(this, "dueDate", void 0);
+
+  _defineProperty(this, "repeatingDays", void 0);
+
+  _defineProperty(this, "tags", void 0);
+
+  _defineProperty(this, "color", void 0);
+
+  _defineProperty(this, "isFavorite", void 0);
+
+  _defineProperty(this, "isArchive", void 0);
+
+  _defineProperty(this, "getTemplate", function () {
+    return "\n          <article class=\"card card--".concat(_this.color, " ").concat(Object.keys(_this.repeatingDays).some(function (day) {
+      return _this.repeatingDays[day];
+    }) ? "card--repeat" : "", "\">\n            <div class=\"card__form\">\n              <div class=\"card__inner\">\n                <div class=\"card__control\">\n                  <button type=\"button\" class=\"card__btn card__btn--edit\">\n                    edit\n                  </button>\n                 <button type=\"button\" class=\"card__btn  card__btn--").concat(_this.isArchive ? "" : "disabled", "\">\n                    archive\n                  </button>\n                  <button\n                    type=\"button\"\n                    class=\"card__btn card__btn--favorites card__btn--").concat(_this.isFavorite ? "" : "disabled", "\"\n                  >\n                    favorites\n                  </button>\n                </div>\n\n                <div class=\"card__color-bar\">\n                  <svg class=\"card__color-bar-wave\" width=\"100%\" height=\"10\">\n                    <use xlink:href=\"#wave\"></use>\n                  </svg>\n                </div>\n\n                <div class=\"card__textarea-wrap\">\n                  <p class=\"card__text\">").concat(_this.description, "</p>\n                </div>\n\n                <div class=\"card__settings\">\n                  <div class=\"card__details\">\n                    <div class=\"card__dates\">\n                      <div class=\"card__date-deadline\">\n                        <p class=\"card__input-deadline-wrap\">\n                          <span class=\"card__date\">").concat(new Date(_this.dueDate).toDateString(), "</span>\n                          <span class=\"card__time\">").concat(new Date(_this.dueDate).getHours(), " : ").concat(new Date(_this.dueDate).getMinutes(), "</span>\n                        </p>\n                      </div>\n                    </div>\n\n                    <div class=\"card__hashtag\">\n                      <div class=\"card__hashtag-list\">\n                      ").concat(Array.from(_this.tags).map(function (tag) {
+      return "\n                       <span class=\"card__hashtag-inner\">\n                          <span class=\"card__hashtag-name\">\n                            ".concat(tag, "\n                          </span>\n                        </span>\n                      ");
+    }).join(""), "\n                      </div>\n                    </div>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </article>");
+  });
+
+  this.description = description;
+  this.dueDate = dueDate;
+  this.repeatingDays = repeatingDays;
+  this.tags = tags;
+  this.color = color;
+  this.isFavorite = isFavorite;
+  this.isArchive = isArchive;
+  this.element = null;
 };
 
+/* harmony default export */ __webpack_exports__["default"] = (Task);
 
 /***/ }),
 
@@ -483,67 +290,63 @@ __webpack_require__.r(__webpack_exports__);
 /* eslint-disable no-console */
 
 
-const getTasks = () => ({
-  description: [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`][Math.floor(Math.random() * 3)],
-  dueDate: Date.now() + 1 + Math.floor(Math.random() * 14) * 24 * 60 * 60 * 1000 - (7 * 24 * 60 * 60 * 1000),
-  repeatingDays: {
-    Mo: false,
-    Tu: false,
-    We: false,
-    Th: false,
-    Fr: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randBoolean"])(),
-    Sa: false,
-    Su: false,
-  },
-  tags: new Set(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["arrayRandomLength"])([
-    `homework`,
-    `theory`,
-    `practice`,
-    `intensive`,
-    `learning`,
-  ]
-  )),
-  color: [`black`, `yellow`, `blue`, `green`, `pink`][Math.floor(Math.random() * 5)],
-  isFavorite: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randBoolean"])(),
-  isArchive: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randBoolean"])(),
-});
+var getTasks = function getTasks() {
+  return {
+    description: ["\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u0442\u0435\u043E\u0440\u0438\u044E", "\u0421\u0434\u0435\u043B\u0430\u0442\u044C \u0434\u043E\u043C\u0430\u0448\u043A\u0443", "\u041F\u0440\u043E\u0439\u0442\u0438 \u0438\u043D\u0442\u0435\u043D\u0441\u0438\u0432 \u043D\u0430 \u0441\u043E\u0442\u043E\u0447\u043A\u0443"][Math.floor(Math.random() * 3)],
+    dueDate: Date.now() + 1 + Math.floor(Math.random() * 14) * 24 * 60 * 60 * 1000 - 7 * 24 * 60 * 60 * 1000,
+    repeatingDays: {
+      Mo: false,
+      Tu: false,
+      We: false,
+      Th: false,
+      Fr: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randBoolean"])(),
+      Sa: false,
+      Su: false
+    },
+    tags: new Set(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["arrayRandomLength"])(["homework", "theory", "practice", "intensive", "learning"])),
+    color: ["black", "yellow", "blue", "green", "pink"][Math.floor(Math.random() * 5)],
+    isFavorite: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randBoolean"])(),
+    isArchive: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randBoolean"])()
+  };
+};
 
-const tasks = new Array(3).fill(``).map(getTasks);
-const filters = [
-  {
-    title: `All`,
-    count: tasks.length,
-  },
-  {
-    title: `Overdue`,
-    count: tasks.filter((value) => value.dueDate < Date.now()).length,
-  },
-  {
-    title: `Today`,
-    count: tasks.filter((value) => new Date(value.dueDate).toDateString() === new Date(Date.now()).toDateString()).length,
-  },
-  {
-    title: `Favorites`,
-    count: tasks.filter((value) => value.isFavorite === true).length,
-  },
-  {
-    title: `Repeating `,
-    count: tasks.filter((value) => {
-      return (Object.values(value.repeatingDays).some((day) => day));
-    }).length,
-  },
-  {
-    title: `Tags`,
-    count: tasks.filter((value) => value.tags).length,
-  },
-  {
-    title: `Archive`,
-    count: tasks.filter((value) => value.isArchive === true).length,
-  },
-];
-
-
-
+var tasks = new Array(3).fill("").map(getTasks);
+var filters = [{
+  title: "All",
+  count: tasks.length
+}, {
+  title: "Overdue",
+  count: tasks.filter(function (value) {
+    return value.dueDate < Date.now();
+  }).length
+}, {
+  title: "Today",
+  count: tasks.filter(function (value) {
+    return new Date(value.dueDate).toDateString() === new Date(Date.now()).toDateString();
+  }).length
+}, {
+  title: "Favorites",
+  count: tasks.filter(function (value) {
+    return value.isFavorite === true;
+  }).length
+}, {
+  title: "Repeating ",
+  count: tasks.filter(function (value) {
+    return Object.values(value.repeatingDays).some(function (day) {
+      return day;
+    });
+  }).length
+}, {
+  title: "Tags",
+  count: tasks.filter(function (value) {
+    return value.tags;
+  }).length
+}, {
+  title: "Archive",
+  count: tasks.filter(function (value) {
+    return value.isArchive === true;
+  }).length
+}];
 
 
 /***/ }),
@@ -577,38 +380,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-const renderTemplate = (container, template, type = `beforeend`) => {
+var renderTemplate = function renderTemplate(container, template) {
+  var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "beforeend";
   container.insertAdjacentHTML(type, template);
 };
 
-const mainContainer = document.querySelector(`.main`);
-
-renderTemplate(mainContainer.querySelector(`.main__control`), Object(_components_menu__WEBPACK_IMPORTED_MODULE_0__["menuTemplate"])());
+var mainContainer = document.querySelector(".main");
+renderTemplate(mainContainer.querySelector(".main__control"), Object(_components_menu__WEBPACK_IMPORTED_MODULE_0__["menuTemplate"])());
 renderTemplate(mainContainer, Object(_components_search__WEBPACK_IMPORTED_MODULE_1__["searchTemplate"])());
 renderTemplate(mainContainer, Object(_components_filter__WEBPACK_IMPORTED_MODULE_2__["filterTemplate"])(_data__WEBPACK_IMPORTED_MODULE_8__["filters"]));
 renderTemplate(mainContainer, Object(_components_board_template__WEBPACK_IMPORTED_MODULE_6__["boardTemplate"])());
-
-const boardElement = mainContainer.querySelector(`.board`);
-const taskListElement = mainContainer.querySelector(`.board__tasks`);
-
-renderTemplate(boardElement, Object(_components_board_filter__WEBPACK_IMPORTED_MODULE_7__["boardFilterTemplate"])(), `afterBegin`);
-
-
+var boardElement = mainContainer.querySelector(".board");
+var taskListElement = mainContainer.querySelector(".board__tasks");
+renderTemplate(boardElement, Object(_components_board_filter__WEBPACK_IMPORTED_MODULE_7__["boardFilterTemplate"])(), "afterBegin");
 renderTemplate(boardElement, Object(_components_load_more_button__WEBPACK_IMPORTED_MODULE_5__["loadMoreTemplate"])());
-
-
-_data__WEBPACK_IMPORTED_MODULE_8__["tasks"].forEach((task) => {
-  taskListElement.insertAdjacentHTML(`beforeend`, Object(_components_task__WEBPACK_IMPORTED_MODULE_3__["taskTemplate"])(task));
-});
-renderTemplate(taskListElement, Object(_components_task_edit__WEBPACK_IMPORTED_MODULE_4__["editTaskTemplate"])(_data__WEBPACK_IMPORTED_MODULE_8__["tasks"][0]), `afterBegin`);
-
-_data__WEBPACK_IMPORTED_MODULE_8__["tasks"].forEach((value) => console.log(value.dueDate));
-
+var task = new _components_task__WEBPACK_IMPORTED_MODULE_3__["default"]();
+console.log(task);
 
 /***/ }),
 
@@ -623,19 +410,22 @@ _data__WEBPACK_IMPORTED_MODULE_8__["tasks"].forEach((value) => console.log(value
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "randBoolean", function() { return randBoolean; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "arrayRandomLength", function() { return arrayRandomLength; });
-const randBoolean = ()=> Boolean(Math.round(Math.random()));
-
-const arrayRandomLength = (arr) => {
-  let newArr = arr.slice();
-
-  for (let i = 0; i < newArr.length; i++) {
-    let num = Math.floor(Math.random() * (i + 1));
-    [newArr[num], newArr[i]] = [newArr[i], newArr[num]];
-  }
-  return newArr.slice(0, Math.floor(Math.random() * arr.length - 1));
+var randBoolean = function randBoolean() {
+  return Boolean(Math.round(Math.random()));
 };
 
+var arrayRandomLength = function arrayRandomLength(arr) {
+  var newArr = arr.slice();
 
+  for (var i = 0; i < newArr.length; i++) {
+    var num = Math.floor(Math.random() * (i + 1));
+    var _ref = [newArr[i], newArr[num]];
+    newArr[num] = _ref[0];
+    newArr[i] = _ref[1];
+  }
+
+  return newArr.slice(0, Math.floor(Math.random() * arr.length - 1));
+};
 
 
 

@@ -4,7 +4,7 @@ import {searchTemplate} from "./components/search";
 import {filterTemplate} from "./components/filter";
 
 
-import {taskTemplate} from "./components/task";
+import Task from "./components/task";
 import {editTaskTemplate} from "./components/task-edit";
 
 import {loadMoreTemplate} from "./components/load-more-button";
@@ -34,9 +34,5 @@ renderTemplate(boardElement, boardFilterTemplate(), `afterBegin`);
 renderTemplate(boardElement, loadMoreTemplate());
 
 
-tasks.forEach((task) => {
-  taskListElement.insertAdjacentHTML(`beforeend`, taskTemplate(task));
-});
-renderTemplate(taskListElement, editTaskTemplate(tasks[0]), `afterBegin`);
-
-tasks.forEach((value) => console.log(value.dueDate));
+const task = new Task();
+console.log(task);

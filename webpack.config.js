@@ -8,6 +8,21 @@ module.exports = {
     filename: `bundle.js`,
     path: path.join(__dirname, `public`)
   },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins : ['@babel/plugin-proposal-class-properties']
+          }
+        }
+      }
+    ]
+  },
   devtool: `source-map`,
   devServer: {
     contentBase: path.join(__dirname, `public`),
