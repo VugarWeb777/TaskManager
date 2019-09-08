@@ -1,15 +1,35 @@
-export const editTaskTemplate = ({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) => {
-  return `
-    <article class="card card--edit card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
+import {createElement} from "../utils";
+import Task from "./task";
+
+class TaskEdit extends Task {
+  constructor({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) {
+    super({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive});
+  }
+
+  getElement() {
+    if (!this.element) {
+      this.element = createElement(this.getTemplate());
+    }
+
+    return this.element;
+  }
+
+  removeElement() {
+    this.element = null;
+  }
+
+  getTemplate = () => {
+    return `
+    <article class="card card--edit card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
-            <button type="button" class="card__btn card__btn--${isArchive ? `` : `disabled`}">
+            <button type="button" class="card__btn card__btn--${this.isArchive ? `` : `disabled`}">
               archive
             </button>
             <button
               type="button"
-              class="card__btn card__btn--favorites card__btn--${isFavorite ? `` : `disabled`}"
+              class="card__btn card__btn--favorites card__btn--${this.isFavorite ? `` : `disabled`}"
             >
               favorites
             </button>
@@ -27,7 +47,7 @@ export const editTaskTemplate = ({description, dueDate, repeatingDays, tags, col
                 class="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >${description}</textarea>
+              >${this.description}</textarea>
             </label>
           </div>
     
@@ -45,25 +65,25 @@ export const editTaskTemplate = ({description, dueDate, repeatingDays, tags, col
                       type="text"
                       placeholder=""
                       name="date"
-                      value="${new Date(dueDate).toDateString()}"
+                      value="${new Date(this.dueDate).toDateString()}"
                     />
                   </label>
                 </fieldset>
     
                 <button class="card__repeat-toggle" type="button">
-                  repeat:<span class="card__repeat-status">${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `yes` : `no`}</span>
+                  repeat:<span class="card__repeat-status">${Object.keys(this.repeatingDays).some((day) => this.repeatingDays[day]) ? `yes` : `no`}</span>
                 </button>
     
                 <fieldset class="card__repeat-days">
                   <div class="card__repeat-days-inner">
-                    ${Object.keys(repeatingDays).map((day)=> `
+                    ${Object.keys(this.repeatingDays).map((day) => `
                     <input
                       class="visually-hidden card__repeat-day-input"
                       type="checkbox"
                       id="repeat-${day}-4"
                       name="repeat"
                       value="${day}"
-                      ${(repeatingDays[day]) ? `checked` : ``}
+                      ${(this.repeatingDays[day]) ? `checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-${day}-4"
                       >${day}</label
@@ -75,7 +95,7 @@ export const editTaskTemplate = ({description, dueDate, repeatingDays, tags, col
     
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
-                ${Array.from(tags).map((tag)=> `
+                ${Array.from(this.tags).map((tag) => `
                 <span class="card__hashtag-inner">
                   <input
                     type="hidden"
@@ -109,16 +129,16 @@ export const editTaskTemplate = ({description, dueDate, repeatingDays, tags, col
               <div class="card__colors-wrap">
                 <input
                 type="radio"
-                id="color-${color}-4"
-                class="card__color-input card__color-input--${color} visually-hidden"
+                id="color-${this.color}-4"
+                class="card__color-input card__color-input--${this.color} visually-hidden"
                 name="color"
-                value="${color}"
+                value="${this.color}"
                 checked
                 />
                 <label
                   for="color-black-4"
-                  class="card__color card__color--${color}"
-                  >${color}</label
+                  class="card__color card__color--${this.color}"
+                  >${this.color}</label
                 >
               </div>
             </div>
@@ -132,4 +152,7 @@ export const editTaskTemplate = ({description, dueDate, repeatingDays, tags, col
       </form>
     </article>    
   `;
-};
+  };
+}
+
+export default TaskEdit;

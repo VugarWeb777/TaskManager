@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-import {randBoolean, arrayRandomLength} from "./utils";
+import {randBoolean, arrayRandomLength,getRandomElemArray} from "./utils";
 
 const getTasks = () => ({
-  description: [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`][Math.floor(Math.random() * 3)],
+  description: getRandomElemArray([`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`,`Изучить ES2015`, `Изучить ООП`, `JavaScript уровень 2`]),
   dueDate: Date.now() + 1 + Math.floor(Math.random() * 14) * 24 * 60 * 60 * 1000 - (7 * 24 * 60 * 60 * 1000),
   repeatingDays: {
     Mo: false,
@@ -26,7 +26,9 @@ const getTasks = () => ({
   isArchive: randBoolean(),
 });
 
-const tasks = new Array(3).fill(``).map(getTasks);
+const TASK_COUNT = 17;
+
+const tasks = new Array(TASK_COUNT).fill(``).map(getTasks);
 const filters = [
   {
     title: `All`,

@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 class Task {
   description;
   dueDate;
@@ -7,19 +9,34 @@ class Task {
   isFavorite;
   isArchive;
 
-  constructor(description, dueDate, repeatingDays, tags, color, isFavorite, isArchive) {
+  constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive}) {
     this.description = description;
-    this.dueDate = dueDate;
+    this.dueDate = new Date(dueDate);
     this.repeatingDays = repeatingDays;
-    this.tags = tags;
+    this.tags = [...tags];
     this.color = color;
     this.isFavorite = isFavorite;
     this.isArchive = isArchive;
     this.element = null;
   }
 
-  getTemplate = () => `
-          <article class="card card--${this.color} ${Object.keys(this.repeatingDays).some((day) => this.repeatingDays[day]) ? `card--repeat` : ``}">
+  get info (){
+    console.log(this);
+  }
+
+  getElement() {
+    if (!this.element) {
+      this.element = createElement(this.getTemplate());
+    }
+
+    return this.element;
+  }
+  removeElement() {
+    this.element = null;
+  }
+
+  getTemplate = () => {
+    return`<article class="card card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
             <div class="card__form">
               <div class="card__inner">
                 <div class="card__control">
@@ -74,8 +91,8 @@ class Task {
               </div>
             </div>
           </article>`;
+  };
 }
-
 
 
 export default Task;
