@@ -1,34 +1,53 @@
 /* eslint-disable no-console */
 import {menuTemplate} from "./components/menu";
 import {searchTemplate} from "./components/search";
-import {filterTemplate} from "./components/filter";
 import Task from "./components/task";
 import TaskEdit from "./components/task-edit";
+import Filter from "./components/filter";
 import {loadMoreTemplate} from "./components/load-more-button";
 import {boardTemplate} from "./components/board-template";
 import {boardFilterTemplate} from "./components/board-filter";
 import {filters, tasks} from "./data";
 import {render, unrendear, Position} from "./utils";
 
-
+// function renderTemplate
 const renderTemplate = (container, template, type = `beforeend`) => {
   container.insertAdjacentHTML(type, template);
 };
 
+//mainContainer
 const mainContainer = document.querySelector(`.main`);
 
+//render menu
 renderTemplate(mainContainer.querySelector(`.main__control`), menuTemplate());
-renderTemplate(mainContainer, searchTemplate());
-renderTemplate(mainContainer, filterTemplate(filters));
-renderTemplate(mainContainer, boardTemplate());
 
+//render search
+renderTemplate(mainContainer, searchTemplate());
+
+// render filters
+const filterContainer = document.createElement(`section`);
+filterContainer.className = `main__filter filter container`;
+
+const renderFilter = (filterMock)=> {
+  const filter = new Filter(filterMock);
+  mainContainer.insertAdjacentElement(`beforeend`, filterContainer);
+
+  renderTemplate(mainContainer.querySelector(`.filter.container`), filter.getTemplate());
+};
+
+filters.forEach(filter => renderFilter(filter));
+
+//render board
+renderTemplate(mainContainer, boardTemplate());
 
 const boardElement = mainContainer.querySelector(`.board`);
 const tasksContainer = mainContainer.querySelector(`.board__tasks`);
 
+//render boardFilter
 renderTemplate(boardElement, boardFilterTemplate(), `afterBegin`);
-renderTemplate(boardElement, loadMoreTemplate());
 
+
+//render tasks
 const renderTask = (taskMock) => {
   const task = new Task(taskMock);
   const taskEdit = new TaskEdit(taskMock);
@@ -68,7 +87,8 @@ const renderTask = (taskMock) => {
 const LOAD_TASK_NUMBER = 8;
 tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => renderTask(task));
 
-
+//render btnLoadMore
+renderTemplate(boardElement, loadMoreTemplate());
 const btnLoadMore = boardElement.querySelector(`.load-more`);
 
 btnLoadMore.addEventListener(`click`, () => {

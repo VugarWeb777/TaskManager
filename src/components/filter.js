@@ -1,19 +1,22 @@
-const getFilter = ({title, count}) => {
-  return `
-      ${`<input type="radio" id="filter__${title}" 
+class Filter {
+  title;
+  count;
+
+  constructor({title, count}) {
+    this.title = title;
+    this.count = count;
+  }
+
+  getTemplate = () => {
+    return `
+      ${`<input type="radio" id="filter__${this.title.toLowerCase()}" 
       class="filter__input visually-hidden" 
       name="filter" 
       checked="">
-      <label for="filter__all" class="filter__label">${title}
-      <span class="filter__all-count">${count}</span>
-      </label>`}
- `;
-};
+      <label for="filter__${this.title.toLowerCase()}" class="filter__label">${this.title}
+      <span class="filter__${this.title.toLowerCase()}-count">${this.count}</span>
+      </label>`}`;
+  };
+}
 
-export const filterTemplate = (filters) => {
-  return `
-    <section class="main__filter filter container"> 
-      ${filters.map((filter) => getFilter(filter)).join(``)}
-    </section>
-  `;
-};
+export default Filter;

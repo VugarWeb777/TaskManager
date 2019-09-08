@@ -122,23 +122,36 @@ var boardTemplate = function boardTemplate() {
 /*!**********************************!*\
   !*** ./src/components/filter.js ***!
   \**********************************/
-/*! exports provided: filterTemplate */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filterTemplate", function() { return filterTemplate; });
-var getFilter = function getFilter(_ref) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Filter = function Filter(_ref) {
+  var _this = this;
+
   var title = _ref.title,
       count = _ref.count;
-  return "\n      ".concat("<input type=\"radio\" id=\"filter__".concat(title, "\" \n      class=\"filter__input visually-hidden\" \n      name=\"filter\" \n      checked=\"\">\n      <label for=\"filter__all\" class=\"filter__label\">").concat(title, "\n      <span class=\"filter__all-count\">").concat(count, "</span>\n      </label>"), "\n ");
+
+  _classCallCheck(this, Filter);
+
+  _defineProperty(this, "title", void 0);
+
+  _defineProperty(this, "count", void 0);
+
+  _defineProperty(this, "getTemplate", function () {
+    return "\n      ".concat("<input type=\"radio\" id=\"filter__".concat(_this.title.toLowerCase(), "\" \n      class=\"filter__input visually-hidden\" \n      name=\"filter\" \n      checked=\"\">\n      <label for=\"filter__").concat(_this.title.toLowerCase(), "\" class=\"filter__label\">").concat(_this.title, "\n      <span class=\"filter__").concat(_this.title.toLowerCase(), "-count\">").concat(_this.count, "</span>\n      </label>"));
+  });
+
+  this.title = title;
+  this.count = count;
 };
 
-var filterTemplate = function filterTemplate(filters) {
-  return "\n    <section class=\"main__filter filter container\"> \n      ".concat(filters.map(function (filter) {
-    return getFilter(filter);
-  }).join(""), "\n    </section>\n  ");
-};
+/* harmony default export */ __webpack_exports__["default"] = (Filter);
 
 /***/ }),
 
@@ -482,9 +495,9 @@ var filters = [{
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/menu */ "./src/components/menu.js");
 /* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/search */ "./src/components/search.js");
-/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/filter */ "./src/components/filter.js");
-/* harmony import */ var _components_task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/task */ "./src/components/task.js");
-/* harmony import */ var _components_task_edit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/task-edit */ "./src/components/task-edit.js");
+/* harmony import */ var _components_task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/task */ "./src/components/task.js");
+/* harmony import */ var _components_task_edit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/task-edit */ "./src/components/task-edit.js");
+/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/filter */ "./src/components/filter.js");
 /* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/load-more-button */ "./src/components/load-more-button.js");
 /* harmony import */ var _components_board_template__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/board-template */ "./src/components/board-template.js");
 /* harmony import */ var _components_board_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/board-filter */ "./src/components/board-filter.js");
@@ -500,26 +513,42 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+ // function renderTemplate
 
 var renderTemplate = function renderTemplate(container, template) {
   var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "beforeend";
   container.insertAdjacentHTML(type, template);
+}; //mainContainer
+
+
+var mainContainer = document.querySelector(".main"); //render menu
+
+renderTemplate(mainContainer.querySelector(".main__control"), Object(_components_menu__WEBPACK_IMPORTED_MODULE_0__["menuTemplate"])()); //render search
+
+renderTemplate(mainContainer, Object(_components_search__WEBPACK_IMPORTED_MODULE_1__["searchTemplate"])()); // render filters
+
+var filterContainer = document.createElement("section");
+filterContainer.className = "main__filter filter container";
+
+var renderFilter = function renderFilter(filterMock) {
+  var filter = new _components_filter__WEBPACK_IMPORTED_MODULE_4__["default"](filterMock);
+  mainContainer.insertAdjacentElement("beforeend", filterContainer);
+  renderTemplate(mainContainer.querySelector(".filter.container"), filter.getTemplate());
 };
 
-var mainContainer = document.querySelector(".main");
-renderTemplate(mainContainer.querySelector(".main__control"), Object(_components_menu__WEBPACK_IMPORTED_MODULE_0__["menuTemplate"])());
-renderTemplate(mainContainer, Object(_components_search__WEBPACK_IMPORTED_MODULE_1__["searchTemplate"])());
-renderTemplate(mainContainer, Object(_components_filter__WEBPACK_IMPORTED_MODULE_2__["filterTemplate"])(_data__WEBPACK_IMPORTED_MODULE_8__["filters"]));
+_data__WEBPACK_IMPORTED_MODULE_8__["filters"].forEach(function (filter) {
+  return renderFilter(filter);
+}); //render board
+
 renderTemplate(mainContainer, Object(_components_board_template__WEBPACK_IMPORTED_MODULE_6__["boardTemplate"])());
 var boardElement = mainContainer.querySelector(".board");
-var tasksContainer = mainContainer.querySelector(".board__tasks");
-renderTemplate(boardElement, Object(_components_board_filter__WEBPACK_IMPORTED_MODULE_7__["boardFilterTemplate"])(), "afterBegin");
-renderTemplate(boardElement, Object(_components_load_more_button__WEBPACK_IMPORTED_MODULE_5__["loadMoreTemplate"])());
+var tasksContainer = mainContainer.querySelector(".board__tasks"); //render boardFilter
+
+renderTemplate(boardElement, Object(_components_board_filter__WEBPACK_IMPORTED_MODULE_7__["boardFilterTemplate"])(), "afterBegin"); //render tasks
 
 var renderTask = function renderTask(taskMock) {
-  var task = new _components_task__WEBPACK_IMPORTED_MODULE_3__["default"](taskMock);
-  var taskEdit = new _components_task_edit__WEBPACK_IMPORTED_MODULE_4__["default"](taskMock);
+  var task = new _components_task__WEBPACK_IMPORTED_MODULE_2__["default"](taskMock);
+  var taskEdit = new _components_task_edit__WEBPACK_IMPORTED_MODULE_3__["default"](taskMock);
 
   var onEscKeyDown = function onEscKeyDown(evt) {
     if (evt.key === "Escape" || evt.key === "Esc") {
@@ -548,7 +577,9 @@ var renderTask = function renderTask(taskMock) {
 var LOAD_TASK_NUMBER = 8;
 _data__WEBPACK_IMPORTED_MODULE_8__["tasks"].slice(0, LOAD_TASK_NUMBER).forEach(function (task) {
   return renderTask(task);
-});
+}); //render btnLoadMore
+
+renderTemplate(boardElement, Object(_components_load_more_button__WEBPACK_IMPORTED_MODULE_5__["loadMoreTemplate"])());
 var btnLoadMore = boardElement.querySelector(".load-more");
 btnLoadMore.addEventListener("click", function () {
   var taskCount = tasksContainer.childElementCount;
