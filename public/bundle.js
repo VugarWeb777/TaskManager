@@ -121,37 +121,6 @@ class AbstractComponent {
 
 /***/ }),
 
-/***/ "./src/components/board-filter.js":
-/*!****************************************!*\
-  !*** ./src/components/board-filter.js ***!
-  \****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
-
-
-class BoardFilter extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
-  constructor(){
-    super();
-  }
-
-  getTemplate() {
-    return `<div class="board__filter-list">
-          <a href="#" class="board__filter">SORT BY DEFAULT</a>
-          <a href="#" class="board__filter">SORT BY DATE up</a>
-          <a href="#" class="board__filter">SORT BY DATE down</a>
-        </div>`;
-  }
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (BoardFilter);
-
-
-/***/ }),
-
 /***/ "./src/components/board.js":
 /*!*********************************!*\
   !*** ./src/components/board.js ***!
@@ -332,6 +301,37 @@ class Search extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Search);
+
+
+/***/ }),
+
+/***/ "./src/components/sort.js":
+/*!********************************!*\
+  !*** ./src/components/sort.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
+
+
+class Sort extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
+  constructor(){
+    super();
+  }
+
+  getTemplate() {
+    return `<div class="board__filter-list">
+          <a href="#" data-sort-type="default" class="board__filter">SORT BY DEFAULT</a>
+          <a href="#" data-sort-type="date-up" class="board__filter">SORT BY DATE up</a>
+          <a href="#" data-sort-type="date-down" class="board__filter">SORT BY DATE down</a>
+        </div>`;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Sort);
 
 
 /***/ }),
@@ -631,8 +631,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../data */ "./src/data.js");
 /* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
-/* harmony import */ var _components_board_filter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/board-filter */ "./src/components/board-filter.js");
-
+/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
 
 
 
@@ -656,7 +655,7 @@ class BoardController {
     this.menu = new _components_menu__WEBPACK_IMPORTED_MODULE_4__["default"]();
     this.search = new _components_search__WEBPACK_IMPORTED_MODULE_5__["default"]();
     this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_6__["default"](_data__WEBPACK_IMPORTED_MODULE_8__["filters"], this.tasks);
-    this.boardFilter = new _components_board_filter__WEBPACK_IMPORTED_MODULE_10__["default"]();
+    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_10__["default"]();
     this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_9__["default"]();
 
   }
@@ -697,20 +696,52 @@ class BoardController {
     Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.taskList.getElement(), taskComponent.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
   }
 
+  _onSortLinkClick(evt) {
+    evt.preventDefault();
+
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+    this.taskList.getElement().innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `date-up`:
+        const sortedByDateUpTasks = this.tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
+        sortedByDateUpTasks.forEach((task) => this._renderTask(task));
+        break;
+      case `date-down`:
+        const sortedByDateDownTasks = this.tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
+        sortedByDateDownTasks.forEach((task) => this._renderTask(task));
+        break;
+      case `default`:
+        this.tasks.forEach((task) => this._renderTask(task));
+        break;
+    }
+  }
+
   init() {
     Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container.querySelector(`.main__control`), this.menu.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
     Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container, this.search.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
     Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container, this.filter.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
     Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.boardFilter.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].AFTERBEGIN);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
 
-    if (this.tasks.length){
+    if (this.tasks.length) {
+      Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.sort.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].AFTERBEGIN);
+      this.sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+
+      Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
+
       const LOAD_TASK_NUMBER = 8;
       this.tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
 
-      console.log(this.loadMoreButton.getElement());
+      this.loadMoreButton.getElement().addEventListener(`click`, () => {
+        const taskCount = this.taskList.getElement().childElementCount;
+        if (taskCount < this.tasks.length) {
+          this.tasks.slice(taskCount, taskCount + LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
+          this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
+        }
+      });
     }
   }
 }
