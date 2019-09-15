@@ -1,15 +1,8 @@
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
 
-class Task {
-  description;
-  dueDate;
-  repeatingDays;
-  tags;
-  color;
-  isFavorite;
-  isArchive;
-
+class Task extends AbstractComponent{
   constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive}) {
+    super();
     this.description = description;
     this.dueDate = new Date(dueDate);
     this.repeatingDays = repeatingDays;
@@ -17,25 +10,9 @@ class Task {
     this.color = color;
     this.isFavorite = isFavorite;
     this.isArchive = isArchive;
-    this.element = null;
   }
 
-  get info (){
-    console.log(this);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-  removeElement() {
-    this.element = null;
-  }
-
-  getTemplate = () => {
+  getTemplate (){
     return`<article class="card card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
             <div class="card__form">
               <div class="card__inner">

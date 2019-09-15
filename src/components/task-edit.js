@@ -2,23 +2,11 @@ import {createElement} from "../utils";
 import Task from "./task";
 
 class TaskEdit extends Task {
-  constructor({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) {
-    super({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive});
+  constructor(data) {
+    super(data);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
-
-  getTemplate = () => {
+  getTemplate (){
     return `
     <article class="card card--edit card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
       <form class="card__form" method="get">

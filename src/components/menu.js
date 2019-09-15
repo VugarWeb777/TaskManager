@@ -1,5 +1,12 @@
-export const menuTemplate = ()=> {
-  return `<section class="control__btn-wrap">
+import AbstractComponent from "./abstract-component";
+
+class Menu extends AbstractComponent{
+  constructor(){
+    super();
+  }
+
+  getTemplate() {
+    return `<section class="control__btn-wrap">
           <input
             type="radio"
             name="control"
@@ -27,4 +34,7 @@ export const menuTemplate = ()=> {
             >STATISTICS</label
           >
         </section>`;
-};
+  }
+}
+
+export  default Menu;

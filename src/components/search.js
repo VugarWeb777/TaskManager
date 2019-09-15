@@ -1,5 +1,12 @@
-export const searchTemplate = function () {
-  return `<section class="main__search search container">
+import AbstractComponent from "./abstract-component";
+
+class Search extends AbstractComponent{
+  constructor(){
+    super();
+  }
+
+  getTemplate() {
+    return `<section class="main__search search container">
         <input
           type="text"
           id="search__input"
@@ -9,4 +16,7 @@ export const searchTemplate = function () {
         />
         <label class="visually-hidden" for="search__input">Поиск</label>
       </section>`;
-};
+  }
+}
+
+export default Search;
