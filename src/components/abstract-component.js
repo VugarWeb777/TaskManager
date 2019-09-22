@@ -13,7 +13,15 @@ class AbstractComponent {
     return this.element;
   }
 
+  removeElement() {
+    this._element = null;
+  }
+
    getTemplate (){
+    throw Error (`Abstract method is not implemented`);
+  }
+
+  updateTemplate(){
     throw Error (`Abstract method is not implemented`);
   }
 }

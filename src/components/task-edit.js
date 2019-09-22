@@ -4,24 +4,24 @@ import Task from "./task";
 class TaskEdit extends Task {
   constructor(data) {
     super(data);
+    this._subscribeOnEvents();
   }
 
-  getTemplate (){
+
+  getTemplate() {
     return `
-    <article class="card card--edit card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
+    <article id="task-edit_${this.id}"  class="card card--edit card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
       <form class="card__form" method="get">
+      <input type="hidden" name="id" value="${this.id}">
         <div class="card__inner">
           <div class="card__control">
-            <button type="button" class="card__btn card__btn--${this.isArchive ? `` : `disabled`}">
-              archive
-            </button>
-            <button
-              type="button"
-              class="card__btn card__btn--favorites card__btn--${this.isFavorite ? `` : `disabled`}"
-            >
-              favorites
-            </button>
-          </div>
+        <button type="button" class="card__btn card__btn--archive ${this.isArchive ? ` card__btn--disabled` : ``}">
+            archive
+        </button>
+        <button type="button" class="card__btn card__btn--favorites ${this.isFavorite ? ` card__btn--disabled` : ``}">
+            favorites
+        </button>
+        </div>
     
           <div class="card__color-bar">
             <svg class="card__color-bar-wave" width="100%" height="10">
@@ -115,20 +115,17 @@ class TaskEdit extends Task {
             <div class="card__colors-inner">
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
-                <input
-                type="radio"
-                id="color-${this.color}-4"
-                class="card__color-input card__color-input--${this.color} visually-hidden"
-                name="color"
-                value="${this.color}"
-                checked
-                />
-                <label
-                  for="color-black-4"
-                  class="card__color card__color--${this.color}"
-                  >${this.color}</label
-                >
-              </div>
+                <input type="radio" id="color-black-1" class="card__color-input card__color-input--black visually-hidden" name="color" value="black" checked="">
+                <label for="color-black-1" class="card__color card__color--black">black</label>
+                <input type="radio" id="color-yellow-1" class="card__color-input card__color-input--yellow visually-hidden" name="color" value="yellow">
+                <label for="color-yellow-1" class="card__color card__color--yellow">yellow</label>
+                <input type="radio" id="color-blue-1" class="card__color-input card__color-input--blue visually-hidden" name="color" value="blue">
+                <label for="color-blue-1" class="card__color card__color--blue">blue</label>
+                <input type="radio" id="color-green-1" class="card__color-input card__color-input--green visually-hidden" name="color" value="green">
+                <label for="color-green-1" class="card__color card__color--green">green</label>
+                <input type="radio" id="color-pink-1" class="card__color-input card__color-input--pink visually-hidden" name="color" value="pink">
+                <label for="color-pink-1" class="card__color card__color--pink">pink</label>
+            </div>
             </div>
           </div>
     
@@ -141,6 +138,98 @@ class TaskEdit extends Task {
     </article>    
   `;
   };
+
+  updateTemplate(newData) {
+    return `<article id="task_${newData.id}" class="card card--${newData.color} ${Object.values(newData.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
+            <div class="card__form">
+              <div class="card__inner">
+                <div class="card__control">
+                  <button type="button" class="card__btn card__btn--edit">
+                    edit
+                  </button>
+                 <button type="button" class="card__btn  card__btn--${newData.isArchive ? `` : `disabled`}">
+                    archive
+                  </button>
+                  <button
+                    type="button"
+                    class="card__btn card__btn--favorites card__btn--${newData.isFavorite ? `` : `disabled`}"
+                  >
+                    favorites
+                  </button>
+                </div>
+
+                <div class="card__color-bar">
+                  <svg class="card__color-bar-wave" width="100%" height="10">
+                    <use xlink:href="#wave"></use>
+                  </svg>
+                </div>
+
+                <div class="card__textarea-wrap">
+                  <p class="card__text">${newData.description}</p>
+                </div>
+
+                <div class="card__settings">
+                  <div class="card__details">
+                    <div class="card__dates">
+                      <div class="card__date-deadline">
+                        <p class="card__input-deadline-wrap">
+                          <span class="card__date">${new Date(newData.dueDate).toDateString()}</span>
+                          <span class="card__time">${new Date(newData.dueDate).getHours()} : ${new Date(newData.dueDate).getMinutes()}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="card__hashtag">
+                      <div class="card__hashtag-list">
+                      ${Array.from(newData.tags).map((tag) => `
+                       <span class="card__hashtag-inner">
+                          <span class="card__hashtag-name">
+                            ${tag}
+                          </span>
+                        </span>
+                      `).join(``)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>`;
+  };
+
+  _subscribeOnEvents() {
+
+    this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
+
+    this.getElement()
+      .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
+      if (evt.keyCode === `13`) {
+        evt.preventDefault();
+        this.getElement().querySelector(`.card__hashtag-list`).insertAdjacentHTML(`beforeend`, `<span class="card__hashtag-inner">
+        <input
+          type="hidden"
+          name="hashtag"
+          value="${evt.target.value}"
+          class="card__hashtag-hidden-input"
+        />
+        <p class="card__hashtag-name">
+          #${evt.target.value}
+        </p>
+        <button type="button" class="card__hashtag-delete">
+          delete
+        </button>
+      </span>`);
+        evt.target.value = ``;
+      }
+    });
+
+    document.addEventListener(`click`, (evt) => {
+      if (evt.target.classList.contains(`card__hashtag-delete`)) {
+        evt.preventDefault();
+        evt.target.closest(`.card__hashtag-inner`).remove();
+      }
+    });
+  }
 }
 
 export default TaskEdit;

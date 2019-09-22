@@ -2,6 +2,7 @@
 import {randBoolean, arrayRandomLength,getRandomElemArray} from "./utils";
 
 const getTasks = () => ({
+  id: Math.round(Math.random()* (200-1)+1),
   description: getRandomElemArray([`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`,`Изучить ES2015`, `Изучить ООП`, `JavaScript уровень 2`]),
   dueDate: Date.now() + 1 + Math.floor(Math.random() * 14) * 24 * 60 * 60 * 1000 - (7 * 24 * 60 * 60 * 1000),
   repeatingDays: {

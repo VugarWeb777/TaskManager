@@ -111,7 +111,15 @@ class AbstractComponent {
     return this.element;
   }
 
+  removeElement() {
+    this._element = null;
+  }
+
    getTemplate (){
+    throw Error (`Abstract method is not implemented`);
+  }
+
+  updateTemplate(){
     throw Error (`Abstract method is not implemented`);
   }
 }
@@ -353,24 +361,24 @@ __webpack_require__.r(__webpack_exports__);
 class TaskEdit extends _task__WEBPACK_IMPORTED_MODULE_1__["default"] {
   constructor(data) {
     super(data);
+    this._subscribeOnEvents();
   }
 
-  getTemplate (){
+
+  getTemplate() {
     return `
-    <article class="card card--edit card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
+    <article id="task-edit_${this.id}"  class="card card--edit card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
       <form class="card__form" method="get">
+      <input type="hidden" name="id" value="${this.id}">
         <div class="card__inner">
           <div class="card__control">
-            <button type="button" class="card__btn card__btn--${this.isArchive ? `` : `disabled`}">
-              archive
-            </button>
-            <button
-              type="button"
-              class="card__btn card__btn--favorites card__btn--${this.isFavorite ? `` : `disabled`}"
-            >
-              favorites
-            </button>
-          </div>
+        <button type="button" class="card__btn card__btn--archive ${this.isArchive ? ` card__btn--disabled` : ``}">
+            archive
+        </button>
+        <button type="button" class="card__btn card__btn--favorites ${this.isFavorite ? ` card__btn--disabled` : ``}">
+            favorites
+        </button>
+        </div>
     
           <div class="card__color-bar">
             <svg class="card__color-bar-wave" width="100%" height="10">
@@ -464,20 +472,17 @@ class TaskEdit extends _task__WEBPACK_IMPORTED_MODULE_1__["default"] {
             <div class="card__colors-inner">
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
-                <input
-                type="radio"
-                id="color-${this.color}-4"
-                class="card__color-input card__color-input--${this.color} visually-hidden"
-                name="color"
-                value="${this.color}"
-                checked
-                />
-                <label
-                  for="color-black-4"
-                  class="card__color card__color--${this.color}"
-                  >${this.color}</label
-                >
-              </div>
+                <input type="radio" id="color-black-1" class="card__color-input card__color-input--black visually-hidden" name="color" value="black" checked="">
+                <label for="color-black-1" class="card__color card__color--black">black</label>
+                <input type="radio" id="color-yellow-1" class="card__color-input card__color-input--yellow visually-hidden" name="color" value="yellow">
+                <label for="color-yellow-1" class="card__color card__color--yellow">yellow</label>
+                <input type="radio" id="color-blue-1" class="card__color-input card__color-input--blue visually-hidden" name="color" value="blue">
+                <label for="color-blue-1" class="card__color card__color--blue">blue</label>
+                <input type="radio" id="color-green-1" class="card__color-input card__color-input--green visually-hidden" name="color" value="green">
+                <label for="color-green-1" class="card__color card__color--green">green</label>
+                <input type="radio" id="color-pink-1" class="card__color-input card__color-input--pink visually-hidden" name="color" value="pink">
+                <label for="color-pink-1" class="card__color card__color--pink">pink</label>
+            </div>
             </div>
           </div>
     
@@ -490,6 +495,98 @@ class TaskEdit extends _task__WEBPACK_IMPORTED_MODULE_1__["default"] {
     </article>    
   `;
   };
+
+  updateTemplate(newData) {
+    return `<article id="task_${newData.id}" class="card card--${newData.color} ${Object.values(newData.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
+            <div class="card__form">
+              <div class="card__inner">
+                <div class="card__control">
+                  <button type="button" class="card__btn card__btn--edit">
+                    edit
+                  </button>
+                 <button type="button" class="card__btn  card__btn--${newData.isArchive ? `` : `disabled`}">
+                    archive
+                  </button>
+                  <button
+                    type="button"
+                    class="card__btn card__btn--favorites card__btn--${newData.isFavorite ? `` : `disabled`}"
+                  >
+                    favorites
+                  </button>
+                </div>
+
+                <div class="card__color-bar">
+                  <svg class="card__color-bar-wave" width="100%" height="10">
+                    <use xlink:href="#wave"></use>
+                  </svg>
+                </div>
+
+                <div class="card__textarea-wrap">
+                  <p class="card__text">${newData.description}</p>
+                </div>
+
+                <div class="card__settings">
+                  <div class="card__details">
+                    <div class="card__dates">
+                      <div class="card__date-deadline">
+                        <p class="card__input-deadline-wrap">
+                          <span class="card__date">${new Date(newData.dueDate).toDateString()}</span>
+                          <span class="card__time">${new Date(newData.dueDate).getHours()} : ${new Date(newData.dueDate).getMinutes()}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="card__hashtag">
+                      <div class="card__hashtag-list">
+                      ${Array.from(newData.tags).map((tag) => `
+                       <span class="card__hashtag-inner">
+                          <span class="card__hashtag-name">
+                            ${tag}
+                          </span>
+                        </span>
+                      `).join(``)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>`;
+  };
+
+  _subscribeOnEvents() {
+
+    this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
+
+    this.getElement()
+      .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
+      if (evt.keyCode === `13`) {
+        evt.preventDefault();
+        this.getElement().querySelector(`.card__hashtag-list`).insertAdjacentHTML(`beforeend`, `<span class="card__hashtag-inner">
+        <input
+          type="hidden"
+          name="hashtag"
+          value="${evt.target.value}"
+          class="card__hashtag-hidden-input"
+        />
+        <p class="card__hashtag-name">
+          #${evt.target.value}
+        </p>
+        <button type="button" class="card__hashtag-delete">
+          delete
+        </button>
+      </span>`);
+        evt.target.value = ``;
+      }
+    });
+
+    document.addEventListener(`click`, (evt) => {
+      if (evt.target.classList.contains(`card__hashtag-delete`)) {
+        evt.preventDefault();
+        evt.target.closest(`.card__hashtag-inner`).remove();
+      }
+    });
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (TaskEdit);
@@ -536,8 +633,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Task extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
-  constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive}) {
+  constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive,id}) {
     super();
+    this.id = id;
     this.description = description;
     this.dueDate = new Date(dueDate);
     this.repeatingDays = repeatingDays;
@@ -548,7 +646,7 @@ class Task extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
   }
 
   getTemplate (){
-    return`<article class="card card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
+    return`<article id="task_${this.id}" class="card card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
             <div class="card__form">
               <div class="card__inner">
                 <div class="card__control">
@@ -623,16 +721,14 @@ class Task extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/board */ "./src/components/board.js");
 /* harmony import */ var _components_task_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/task-list */ "./src/components/task-list.js");
-/* harmony import */ var _components_task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/task */ "./src/components/task.js");
-/* harmony import */ var _components_task_edit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/task-edit */ "./src/components/task-edit.js");
-/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/menu */ "./src/components/menu.js");
-/* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/search */ "./src/components/search.js");
-/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../data */ "./src/data.js");
-/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
-/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
-
+/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/menu */ "./src/components/menu.js");
+/* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/search */ "./src/components/search.js");
+/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../data */ "./src/data.js");
+/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
+/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
+/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./task */ "./src/controllers/task.js");
 
 
 
@@ -652,48 +748,65 @@ class BoardController {
     this.tasks = tasks;
     this.board = new _components_board__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.taskList = new _components_task_list__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    this.menu = new _components_menu__WEBPACK_IMPORTED_MODULE_4__["default"]();
-    this.search = new _components_search__WEBPACK_IMPORTED_MODULE_5__["default"]();
-    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_6__["default"](_data__WEBPACK_IMPORTED_MODULE_8__["filters"], this.tasks);
-    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_10__["default"]();
-    this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_9__["default"]();
+    this.menu = new _components_menu__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.search = new _components_search__WEBPACK_IMPORTED_MODULE_3__["default"]();
+    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_4__["default"](_data__WEBPACK_IMPORTED_MODULE_6__["filters"], this.tasks);
+    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_8__["default"]();
+    this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_7__["default"]();
+    this._subscriptions = [];
+    this._onChangeView = this._onChangeView.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+  }
 
+  init() {
+    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container.querySelector(`.main__control`), this.menu.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container, this.search.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container, this.filter.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+
+    if (this.tasks.length) {
+      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.sort.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].AFTERBEGIN);
+      this.sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+
+      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+
+      const LOAD_TASK_NUMBER = 8;
+      this.tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
+
+      this.loadMoreButton.getElement().addEventListener(`click`, () => {
+        const taskCount = this.taskList.getElement().childElementCount;
+        if (taskCount < this.tasks.length) {
+          this.tasks.slice(taskCount, taskCount + LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
+          this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
+        }
+      });
+    }
+  }
+
+  _renderBoard(){
+    document.querySelector(`.board__tasks`).innerHTML = "";
+    document.querySelector(`.load-more`).remove();
+
+    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+
+    const LOAD_TASK_NUMBER = 8;
+    this.tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
   }
 
   _renderTask(task) {
-    const taskComponent = new _components_task__WEBPACK_IMPORTED_MODULE_2__["default"](task);
-    const taskEditComponent = new _components_task_edit__WEBPACK_IMPORTED_MODULE_3__["default"](task);
+    const taskController = new _task__WEBPACK_IMPORTED_MODULE_9__["default"](this.taskList, task, this._onDataChange, this._onChangeView);
+    this._subscriptions.push(taskController.setDefaultView.bind(taskController));
+  }
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        this.taskList.getElement().replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
+  _onChangeView() {
+    this._subscriptions.forEach((it) => it());
+  }
 
-    taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
-      this.taskList.getElement().replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    taskEditComponent.getElement().querySelector(`textarea`)
-      .addEventListener(`focus`, () => {
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-    taskEditComponent.getElement()
-      .querySelector(`.card__save`)
-      .addEventListener(`click`, () => {
-        this.taskList.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-    taskEditComponent.getElement().querySelector(`textarea`)
-      .addEventListener(`blur`, () => {
-        document.addEventListener(`keydown`, onEscKeyDown);
-      });
-
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.taskList.getElement(), taskComponent.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
+  _onDataChange(newData, oldData) {
+    this.tasks[this.tasks.findIndex((it) => it === oldData)] = newData;
+    this._renderBoard();
   }
 
   _onSortLinkClick(evt) {
@@ -718,36 +831,172 @@ class BoardController {
         break;
     }
   }
-
-  init() {
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container.querySelector(`.main__control`), this.menu.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container, this.search.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container, this.filter.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-
-    if (this.tasks.length) {
-      Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-      Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.sort.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].AFTERBEGIN);
-      this.sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
-
-      Object(_utils__WEBPACK_IMPORTED_MODULE_7__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_7__["Position"].BEFOREEND);
-
-      const LOAD_TASK_NUMBER = 8;
-      this.tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
-
-      this.loadMoreButton.getElement().addEventListener(`click`, () => {
-        const taskCount = this.taskList.getElement().childElementCount;
-        if (taskCount < this.tasks.length) {
-          this.tasks.slice(taskCount, taskCount + LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
-          this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
-        }
-      });
-    }
-  }
 }
 
 
 /* harmony default export */ __webpack_exports__["default"] = (BoardController);
+
+
+/***/ }),
+
+/***/ "./src/controllers/task.js":
+/*!*********************************!*\
+  !*** ./src/controllers/task.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/task */ "./src/components/task.js");
+/* harmony import */ var _components_task_edit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/task-edit */ "./src/components/task-edit.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
+
+
+class TaskController {
+  constructor(container, data, onDataChange, onChangeView) {
+    this.container = container;
+    this.data = data;
+    this._onChangeView = onChangeView;
+    this._onDataChange = onDataChange;
+    this.taskView = new _components_task__WEBPACK_IMPORTED_MODULE_0__["default"](data);
+    this.taskEdit = new _components_task_edit__WEBPACK_IMPORTED_MODULE_1__["default"](data);
+    this.init();
+  }
+
+  init() {
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    this.taskView.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+      this._onChangeView();
+      this.container.getElement().replaceChild(this.taskEdit.getElement(), this.taskView.getElement());
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+    this.taskEdit.getElement().querySelector(`textarea`)
+      .addEventListener(`focus`, () => {
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
+
+    this.taskEdit.getElement()
+      .querySelector(`.card__save`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        const formData = new FormData(
+          this.taskEdit.getElement().querySelector(`.card__form`),
+        );
+
+        const entry = {
+          id: formData.get(`id`),
+          description: formData.get(`text`),
+          color: formData.get(`color`),
+          tags: new Set(formData.getAll(`hashtag`)),
+          dueDate: new Date(formData.get(`date`)),
+          repeatingDays: formData.getAll(`repeat`).reduce(
+            (acc, it) => {
+              acc[it] = true;
+              return acc;
+            },
+            {
+              mo: false,
+              tu: false,
+              we: false,
+              th: false,
+              fr: false,
+              sa: false,
+              su: false,
+            },
+          ),
+        };
+
+        //Update one task - when replacing, the handler is deleted and the form is not edited
+        // const newTaskTemplate = this.taskEdit.updateTemplate(entry);
+        // const newTaskElement = createElement(newTaskTemplate);
+        // const editTaskElement = this.container.getElement().querySelector(`article#task-edit_${entry.id}`);
+        // this.container.getElement().replaceChild(newTaskElement, editTaskElement);
+
+        this._onDataChange(entry, this.data);
+
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
+
+    this.taskEdit
+      .getElement()
+      .querySelector(`.card__btn--favorites`)
+      .addEventListener(`click`, () => {
+
+        this.taskEdit.getElement().querySelector(`.card__btn--favorites`).classList.toggle(`card__btn--disabled`);
+
+      });
+
+    this.taskEdit
+      .getElement()
+      .querySelector(`.card__btn--archive`)
+      .addEventListener(`click`, () => {
+
+        this.taskEdit.getElement().querySelector(`.card__btn--archive`).classList.toggle(`card__btn--disabled`);
+
+      });
+
+    this.taskEdit.getElement()
+      .querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      const fieldsetElement = this.taskEdit.getElement().querySelector(`.card__date-deadline`);
+      if (fieldsetElement.hasAttribute(`disabled`)) {
+        fieldsetElement.removeAttribute(`disabled`);
+        this.taskEdit.getElement().querySelector(`.card__date-status`).textContent = `yes`;
+      } else {
+        fieldsetElement.setAttribute(`disabled`, `true`);
+        this.taskEdit.getElement().querySelector(`.card__date-status`).textContent = `no`;
+
+      }
+    });
+
+    this.taskEdit.getElement()
+      .querySelector(`.card__repeat-toggle`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      const fieldsetElement = this.taskEdit.getElement().querySelector(`.card__repeat-days`);
+      if (fieldsetElement.hasAttribute(`disabled`)) {
+        fieldsetElement.removeAttribute(`disabled`);
+        this.taskEdit.getElement().querySelector(`.card__repeat-status`).textContent = `yes`;
+      } else {
+        fieldsetElement.setAttribute(`disabled`, `true`);
+        this.taskEdit.getElement().querySelector(`.card__repeat-status`).textContent = `no`;
+        this.taskEdit.getElement().querySelectorAll(`.card__repeat-day-input`).forEach((checkItem) => {
+          checkItem.checked = false;
+        });
+      }
+    });
+
+    this.taskEdit.getElement().querySelector(`textarea`)
+      .addEventListener(`blur`, () => {
+        document.addEventListener(`keydown`, onEscKeyDown);
+      });
+
+    Object(_utils__WEBPACK_IMPORTED_MODULE_2__["render"])(this.container.getElement(), this.taskView.getElement(), _utils__WEBPACK_IMPORTED_MODULE_2__["Position"].BEFOREEND);
+  }
+
+
+  setDefaultView() {
+    if (this.container.getElement().contains(this.taskEdit.getElement())) {
+      this.container
+        .getElement()
+        .replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+    }
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (TaskController);
 
 
 /***/ }),
@@ -768,6 +1017,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const getTasks = () => ({
+  id: Math.round(Math.random()* (200-1)+1),
   description: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["getRandomElemArray"])([`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`,`Изучить ES2015`, `Изучить ООП`, `JavaScript уровень 2`]),
   dueDate: Date.now() + 1 + Math.floor(Math.random() * 14) * 24 * 60 * 60 * 1000 - (7 * 24 * 60 * 60 * 1000),
   repeatingDays: {

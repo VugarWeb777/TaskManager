@@ -1,8 +1,9 @@
 import AbstractComponent from "./abstract-component";
 
 class Task extends AbstractComponent{
-  constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive}) {
+  constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive,id}) {
     super();
+    this.id = id;
     this.description = description;
     this.dueDate = new Date(dueDate);
     this.repeatingDays = repeatingDays;
@@ -13,7 +14,7 @@ class Task extends AbstractComponent{
   }
 
   getTemplate (){
-    return`<article class="card card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
+    return`<article id="task_${this.id}" class="card card--${this.color} ${Object.values(this.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
             <div class="card__form">
               <div class="card__inner">
                 <div class="card__control">
