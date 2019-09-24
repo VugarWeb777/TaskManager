@@ -1,6 +1,9 @@
 import Task from "../components/task";
 import TaskEdit from "../components/task-edit";
 import {Position, render} from "../utils";
+import flatpickr from "flatpickr";
+import 'flatpickr/dist/flatpickr.min.css'
+import 'flatpickr/dist/themes/light.css'
 
 class TaskController {
   constructor(container, data, onDataChange, onChangeView) {
@@ -129,6 +132,12 @@ class TaskController {
       .addEventListener(`blur`, () => {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
+
+    flatpickr(this.taskEdit.getElement().querySelector(`.card__date`), {
+      altInput: true,
+      allowInput: true,
+      defaultDate: this.data.dueDate,
+    });
 
     render(this.container.getElement(), this.taskView.getElement(), Position.BEFOREEND);
   }
