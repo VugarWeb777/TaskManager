@@ -1,6 +1,7 @@
-import BoardController from "./controllers/board";
-import {tasks} from "./data";
+import AppController from "./controllers/app";
 
-const  mainContainer = document.body.querySelector(`.main`);
-const boardController = new BoardController(mainContainer,tasks);
-boardController.init();
+const mainContainer = document.body.querySelector(`.main`);
+const menuContainer = mainContainer.querySelector(`.main__control`);
+
+const appController = new AppController(menuContainer,mainContainer);
+appController.init();

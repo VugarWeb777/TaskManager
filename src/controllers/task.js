@@ -78,6 +78,13 @@ class TaskController {
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 
+    this.taskEdit.getElement().querySelector(`.card__delete`)
+      .addEventListener(`click`, ()=> {
+
+        this._onDataChange(null, this.data);
+      });
+
+
     this.taskEdit
       .getElement()
       .querySelector(`.card__btn--favorites`)

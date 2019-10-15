@@ -37,7 +37,7 @@ const render = (container, element, place) => {
 
 const unrendear = (element) => {
   if (element) {
-    element.remove();
+    element.innerHTML = "";
   }
 };
 

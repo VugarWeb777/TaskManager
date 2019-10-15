@@ -3426,6 +3426,61 @@ class Sort extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
 
 /***/ }),
 
+/***/ "./src/components/statistic.js":
+/*!*************************************!*\
+  !*** ./src/components/statistic.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
+
+
+class Statistic extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
+
+  getTemplate() {
+    return `<section class="statistic container">
+        <div class="statistic__line">
+          <div class="statistic__period">
+            <h2 class="statistic__period-title">Task Activity DIAGRAM</h2>
+
+            <div class="statistic-input-wrap">
+              <input
+                class="statistic__period-input"
+                type="text"
+                placeholder="01 Feb - 08 Feb"
+              />
+            </div>
+
+            <p class="statistic__period-result">
+              In total for the specified period
+              <span class="statistic__task-found">0</span> tasks were fulfilled.
+            </p>
+          </div>
+          <div class="statistic__line-graphic visually-hidden">
+            <canvas class="statistic__days" width="550" height="150"></canvas>
+          </div>
+        </div>
+
+        <div class="statistic__circle">
+          <div class="statistic__tags-wrap visually-hidden">
+            <canvas class="statistic__tags" width="400" height="300"></canvas>
+          </div>
+          <div class="statistic__colors-wrap visually-hidden">
+            <canvas class="statistic__colors" width="400" height="300"></canvas>
+          </div>
+        </div>
+      </section>`;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Statistic);
+
+
+/***/ }),
+
 /***/ "./src/components/task-edit.js":
 /*!*************************************!*\
   !*** ./src/components/task-edit.js ***!
@@ -3792,6 +3847,84 @@ class Task extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
 
 /***/ }),
 
+/***/ "./src/controllers/app.js":
+/*!********************************!*\
+  !*** ./src/controllers/app.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/menu */ "./src/components/menu.js");
+/* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/search */ "./src/components/search.js");
+/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
+/* harmony import */ var _components_statistic__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/statistic */ "./src/components/statistic.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+/* harmony import */ var _board__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./board */ "./src/controllers/board.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../data */ "./src/data.js");
+
+
+
+
+
+
+
+
+const ControlId = {
+  taskId: `control__task`,
+  statisticId: `control__statistic`,
+  newTaskId: `control__new-task`,
+};
+
+
+class AppController {
+  constructor(menuContainer, mainContainer) {
+    this.menuContainer = menuContainer;
+    this.mainContainer = mainContainer;
+    this.siteMenu = new _components_menu__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.search = new _components_search__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_2__["default"](_data__WEBPACK_IMPORTED_MODULE_6__["filters"], _data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
+    this.statistic = new _components_statistic__WEBPACK_IMPORTED_MODULE_3__["default"]();
+  }
+
+  init() {
+    this.statistic.getElement().classList.add(`visually-hidden`);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.menuContainer, this.siteMenu.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.mainContainer, this.search.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.mainContainer, this.filter.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.mainContainer, this.statistic.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+
+    this.boardController = new _board__WEBPACK_IMPORTED_MODULE_5__["default"](this.mainContainer, _data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
+
+    this.boardController.init();
+
+    this.siteMenu.getElement().addEventListener(`change`, (evt) => this._componentSwitcher(evt));
+  }
+
+
+  _componentSwitcher(evt){
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+    switch (evt.target.id) {
+      case ControlId.taskId:
+        this.statistic.getElement().classList.add(`visually-hidden`);
+        this.boardController.show();
+        break;
+      case ControlId.statisticId:
+        this.boardController.hide();
+        this.statistic.getElement().classList.remove(`visually-hidden`);
+        break;
+    }
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (AppController);
+
+
+/***/ }),
+
 /***/ "./src/controllers/board.js":
 /*!**********************************!*\
   !*** ./src/controllers/board.js ***!
@@ -3803,14 +3936,13 @@ class Task extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/board */ "./src/components/board.js");
 /* harmony import */ var _components_task_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/task-list */ "./src/components/task-list.js");
-/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/menu */ "./src/components/menu.js");
-/* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/search */ "./src/components/search.js");
-/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../data */ "./src/data.js");
-/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
-/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
-/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./task */ "./src/controllers/task.js");
+/* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/search */ "./src/components/search.js");
+/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../data */ "./src/data.js");
+/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
+/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
+/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./task */ "./src/controllers/task.js");
 
 
 
@@ -3821,6 +3953,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const TASK_IN_ROW = 8;
 
 
 class BoardController {
@@ -3830,55 +3963,57 @@ class BoardController {
     this.tasks = tasks;
     this.board = new _components_board__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.taskList = new _components_task_list__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    this.menu = new _components_menu__WEBPACK_IMPORTED_MODULE_2__["default"]();
-    this.search = new _components_search__WEBPACK_IMPORTED_MODULE_3__["default"]();
-    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_4__["default"](_data__WEBPACK_IMPORTED_MODULE_6__["filters"], this.tasks);
-    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_8__["default"]();
-    this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_7__["default"]();
+    this.search = new _components_search__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_3__["default"](_data__WEBPACK_IMPORTED_MODULE_5__["filters"], this.tasks);
+    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_7__["default"]();
+    this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_6__["default"]();
+    this.showedTasks = TASK_IN_ROW;
+
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
   }
 
   init() {
-    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container.querySelector(`.main__control`), this.menu.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container, this.search.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container, this.filter.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
 
-    if (this.tasks.length) {
-      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
-      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.sort.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].AFTERBEGIN);
-      this.sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+   this._renderBoard();
+  }
 
-      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+  hide(){
+    this.board.getElement().classList.add(`visually-hidden`);
+  }
 
-      const LOAD_TASK_NUMBER = 8;
-      this.tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
-
-      this.loadMoreButton.getElement().addEventListener(`click`, () => {
-        const taskCount = this.taskList.getElement().childElementCount;
-        if (taskCount < this.tasks.length) {
-          this.tasks.slice(taskCount, taskCount + LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
-          this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
-        }
-      });
-    }
+  show(){
+    this.board.getElement().classList.remove(`visually-hidden`);
   }
 
   _renderBoard(){
-    document.querySelector(`.board__tasks`).innerHTML = "";
-    document.querySelector(`.load-more`).remove();
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["unrendear"])(this.taskList.getElement());
+    this.taskList.removeElement();
 
-    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_5__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_5__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.taskList.getElement(),_utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
 
-    const LOAD_TASK_NUMBER = 8;
-    this.tasks.slice(0, LOAD_TASK_NUMBER).forEach(task => this._renderTask(task));
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["unrendear"])(this.loadMoreButton);
+    this.loadMoreButton.removeElement();
+
+    if (this.tasks.length) {
+      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.taskList.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.sort.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].AFTERBEGIN);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.loadMoreButton.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+
+      this.tasks.slice(0 , this.showedTasks).forEach((task)=> this._renderTask(task));
+      this.loadMoreButton.getElement().addEventListener(`click`, ()=> this._onLoadMore());
+      this.sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+    }
+
+    if (this.showedTasks < this.tasks.length){
+      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(),this.loadMoreButton.getElement(),_utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    }
   }
 
   _renderTask(task) {
-    const taskController = new _task__WEBPACK_IMPORTED_MODULE_9__["default"](this.taskList, task, this._onDataChange, this._onChangeView);
+    const taskController = new _task__WEBPACK_IMPORTED_MODULE_8__["default"](this.taskList, task, this._onDataChange, this._onChangeView);
     this._subscriptions.push(taskController.setDefaultView.bind(taskController));
   }
 
@@ -3887,8 +4022,31 @@ class BoardController {
   }
 
   _onDataChange(newData, oldData) {
-    this.tasks[this.tasks.findIndex((it) => it === oldData)] = newData;
+    const index = this.tasks.findIndex((task)=> task === oldData);
+
+    if (newData === null){
+      this.tasks = [...this.tasks.slice(0,index), ...this.tasks.slice(index + 1)];
+      this.showedTasks = Math.min(this.showedTasks, this.tasks.length);
+    } else {
+      this.tasks[index] = newData;
+    }
+
     this._renderBoard();
+  }
+
+  _onLoadMore(){
+      // const taskCount = this.taskList.getElement().childElementCount;
+      // if (taskCount < this.tasks.length) {
+      //   this.tasks.slice(taskCount, taskCount + TASK_IN_ROW).forEach(task => this._renderTask(task));
+      //   this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
+      // }
+    this.tasks.slice(this.showedTasks, this.showedTasks + TASK_IN_ROW).forEach((task)=> this._renderTask(task));
+    this.showedTasks += TASK_IN_ROW;
+
+    if (this.showedTasks>= this.tasks.length){
+      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["unrendear"])(this.loadMoreButton.getElement());
+      this.loadMoreButton.removeElement();
+    }
   }
 
   _onSortLinkClick(evt) {
@@ -4018,6 +4176,13 @@ class TaskController {
 
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
+
+    this.taskEdit.getElement().querySelector(`.card__delete`)
+      .addEventListener(`click`, ()=> {
+
+        this._onDataChange(null, this.data);
+      });
+
 
     this.taskEdit
       .getElement()
@@ -4190,14 +4355,14 @@ const filters = [
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _controllers_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./controllers/board */ "./src/controllers/board.js");
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data */ "./src/data.js");
+/* harmony import */ var _controllers_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./controllers/app */ "./src/controllers/app.js");
 
 
+const mainContainer = document.body.querySelector(`.main`);
+const menuContainer = mainContainer.querySelector(`.main__control`);
 
-const  mainContainer = document.body.querySelector(`.main`);
-const boardController = new _controllers_board__WEBPACK_IMPORTED_MODULE_0__["default"](mainContainer,_data__WEBPACK_IMPORTED_MODULE_1__["tasks"]);
-boardController.init();
+const appController = new _controllers_app__WEBPACK_IMPORTED_MODULE_0__["default"](menuContainer,mainContainer);
+appController.init();
 
 
 /***/ }),
@@ -4257,7 +4422,7 @@ const render = (container, element, place) => {
 
 const unrendear = (element) => {
   if (element) {
-    element.remove();
+    element.innerHTML = "";
   }
 };
 
