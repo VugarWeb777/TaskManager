@@ -6,20 +6,43 @@ import 'flatpickr/dist/flatpickr.min.css'
 import 'flatpickr/dist/themes/light.css'
 
 class TaskController {
-  constructor(container, data, onDataChange, onChangeView) {
+  constructor(container, data,mode, onDataChange, onChangeView) {
     this.container = container;
     this.data = data;
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
     this.taskView = new Task(data);
     this.taskEdit = new TaskEdit(data);
-    this.init();
+    this.create(mode);
   }
 
-  init() {
+  create(mode) {
+
+    let renderPosition = Position.BEFOREEND;
+    let currentView = this.taskView;
+
+    if (mode === `ADDING`){
+      renderPosition = Position.AFTERBEGIN;
+      currentView = this.taskEdit;
+    }
+
+    flatpickr(this.taskEdit.getElement().querySelector(`.card__date`), {
+      altInput: true,
+      allowInput: true,
+      defaultDate: this.data.dueDate,
+    });
+
+
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+        if (mode === `DEFAULT`){
+          if (this.container.getElement().contains(this.taskEdit.getElement())){
+            this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+          }
+          else if (mode === `ADDING`){
+            this.container.getElement().removeChild(currentView.getElement())
+          }
+        }
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -67,13 +90,8 @@ class TaskController {
           ),
         };
 
-        //Update one task - when replacing, the handler is deleted and the form is not edited
-        // const newTaskTemplate = this.taskEdit.updateTemplate(entry);
-        // const newTaskElement = createElement(newTaskTemplate);
-        // const editTaskElement = this.container.getElement().querySelector(`article#task-edit_${entry.id}`);
-        // this.container.getElement().replaceChild(newTaskElement, editTaskElement);
 
-        this._onDataChange(entry, this.data);
+        this._onDataChange(entry,mode === `DEFAULT` ? this.data : null);
 
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
@@ -140,13 +158,7 @@ class TaskController {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
 
-    flatpickr(this.taskEdit.getElement().querySelector(`.card__date`), {
-      altInput: true,
-      allowInput: true,
-      defaultDate: this.data.dueDate,
-    });
-
-    render(this.container.getElement(), this.taskView.getElement(), Position.BEFOREEND);
+    render(this.container.getElement(), currentView.getElement(), renderPosition);
   }
 
 

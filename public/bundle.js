@@ -4112,10 +4112,10 @@ class TaskController {
     this._onDataChange = onDataChange;
     this.taskView = new _components_task__WEBPACK_IMPORTED_MODULE_0__["default"](data);
     this.taskEdit = new _components_task_edit__WEBPACK_IMPORTED_MODULE_1__["default"](data);
-    this.init();
+    this.create();
   }
 
-  init() {
+  create() {
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());

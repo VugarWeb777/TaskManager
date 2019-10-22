@@ -23,6 +23,7 @@ class BoardController {
     this.sort = new Sort();
     this.loadMoreButton = new LoadMoreButton();
     this.showedTasks = TASK_IN_ROW;
+    this.creatingTask = null;
 
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -41,6 +42,25 @@ class BoardController {
 
   show(){
     this.board.getElement().classList.remove(`visually-hidden`);
+  }
+
+  createTask(){
+
+    if (this.creatingTask){
+      return;
+    }
+
+    const defaultTask = {
+      description: ``,
+      dueDate: new Date(),
+      tags: new Set(),
+      color: [],
+      repeatingDays: {},
+      isFavorite: false,
+      isArchive: false,
+    };
+
+    this.creatingTask = new TaskController(this.taskList,defaultTask,`ADDING`,this._onDataChange, this._onChangeView);
   }
 
   _renderBoard(){
@@ -68,7 +88,7 @@ class BoardController {
   }
 
   _renderTask(task) {
-    const taskController = new TaskController(this.taskList, task, this._onDataChange, this._onChangeView);
+    const taskController = new TaskController(this.taskList, task,`DEFAULT`,this._onDataChange, this._onChangeView);
     this._subscriptions.push(taskController.setDefaultView.bind(taskController));
   }
 
@@ -82,7 +102,11 @@ class BoardController {
     if (newData === null){
       this.tasks = [...this.tasks.slice(0,index), ...this.tasks.slice(index + 1)];
       this.showedTasks = Math.min(this.showedTasks, this.tasks.length);
-    } else {
+    } else if (oldData === null) {
+      this.creatingTask = null;
+      this.tasks = [newData, ...this.tasks];
+    }
+    else {
       this.tasks[index] = newData;
     }
 
@@ -90,11 +114,6 @@ class BoardController {
   }
 
   _onLoadMore(){
-      // const taskCount = this.taskList.getElement().childElementCount;
-      // if (taskCount < this.tasks.length) {
-      //   this.tasks.slice(taskCount, taskCount + TASK_IN_ROW).forEach(task => this._renderTask(task));
-      //   this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
-      // }
     this.tasks.slice(this.showedTasks, this.showedTasks + TASK_IN_ROW).forEach((task)=> this._renderTask(task));
     this.showedTasks += TASK_IN_ROW;
 

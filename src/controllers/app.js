@@ -42,6 +42,7 @@ class AppController {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
+
     switch (evt.target.id) {
       case ControlId.taskId:
         this.statistic.getElement().classList.add(`visually-hidden`);
@@ -50,6 +51,9 @@ class AppController {
       case ControlId.statisticId:
         this.boardController.hide();
         this.statistic.getElement().classList.remove(`visually-hidden`);
+        break;
+      case ControlId.newTaskId :
+        this.boardController.createTask();
         break;
     }
   }

@@ -199,7 +199,7 @@ class TaskEdit extends Task {
 
   _subscribeOnEvents() {
 
-    this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
+    // this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
 
     this.getElement()
       .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
