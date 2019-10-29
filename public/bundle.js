@@ -3693,7 +3693,7 @@ class TaskEdit extends _task__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
   _subscribeOnEvents() {
 
-    this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
+    // this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
 
     this.getElement()
       .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
@@ -3907,6 +3907,7 @@ class AppController {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
+
     switch (evt.target.id) {
       case ControlId.taskId:
         this.statistic.getElement().classList.add(`visually-hidden`);
@@ -3915,6 +3916,9 @@ class AppController {
       case ControlId.statisticId:
         this.boardController.hide();
         this.statistic.getElement().classList.remove(`visually-hidden`);
+        break;
+      case ControlId.newTaskId :
+        this.boardController.createTask();
         break;
     }
   }
@@ -3968,6 +3972,7 @@ class BoardController {
     this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_7__["default"]();
     this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_6__["default"]();
     this.showedTasks = TASK_IN_ROW;
+    this.creatingTask = null;
 
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -3986,6 +3991,25 @@ class BoardController {
 
   show(){
     this.board.getElement().classList.remove(`visually-hidden`);
+  }
+
+  createTask(){
+
+    if (this.creatingTask){
+      return;
+    }
+
+    const defaultTask = {
+      description: ``,
+      dueDate: new Date(),
+      tags: new Set(),
+      color: [],
+      repeatingDays: {},
+      isFavorite: false,
+      isArchive: false,
+    };
+
+    this.creatingTask = new _task__WEBPACK_IMPORTED_MODULE_8__["default"](this.taskList,defaultTask,`ADDING`,this._onDataChange, this._onChangeView);
   }
 
   _renderBoard(){
@@ -4013,7 +4037,7 @@ class BoardController {
   }
 
   _renderTask(task) {
-    const taskController = new _task__WEBPACK_IMPORTED_MODULE_8__["default"](this.taskList, task, this._onDataChange, this._onChangeView);
+    const taskController = new _task__WEBPACK_IMPORTED_MODULE_8__["default"](this.taskList, task,`DEFAULT`,this._onDataChange, this._onChangeView);
     this._subscriptions.push(taskController.setDefaultView.bind(taskController));
   }
 
@@ -4027,7 +4051,11 @@ class BoardController {
     if (newData === null){
       this.tasks = [...this.tasks.slice(0,index), ...this.tasks.slice(index + 1)];
       this.showedTasks = Math.min(this.showedTasks, this.tasks.length);
-    } else {
+    } else if (oldData === null) {
+      this.creatingTask = null;
+      this.tasks = [newData, ...this.tasks];
+    }
+    else {
       this.tasks[index] = newData;
     }
 
@@ -4035,11 +4063,6 @@ class BoardController {
   }
 
   _onLoadMore(){
-      // const taskCount = this.taskList.getElement().childElementCount;
-      // if (taskCount < this.tasks.length) {
-      //   this.tasks.slice(taskCount, taskCount + TASK_IN_ROW).forEach(task => this._renderTask(task));
-      //   this.loadMoreButton.getElement().className = `${this.taskList.getElement().childElementCount === this.tasks.length ? 'visually-hidden' : 'load-more'}`;
-      // }
     this.tasks.slice(this.showedTasks, this.showedTasks + TASK_IN_ROW).forEach((task)=> this._renderTask(task));
     this.showedTasks += TASK_IN_ROW;
 
@@ -4105,20 +4128,43 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class TaskController {
-  constructor(container, data, onDataChange, onChangeView) {
+  constructor(container, data,mode, onDataChange, onChangeView) {
     this.container = container;
     this.data = data;
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
     this.taskView = new _components_task__WEBPACK_IMPORTED_MODULE_0__["default"](data);
     this.taskEdit = new _components_task_edit__WEBPACK_IMPORTED_MODULE_1__["default"](data);
-    this.create();
+    this.create(mode);
   }
 
-  create() {
+  create(mode) {
+
+    let renderPosition = _utils__WEBPACK_IMPORTED_MODULE_2__["Position"].BEFOREEND;
+    let currentView = this.taskView;
+
+    if (mode === `ADDING`){
+      renderPosition = _utils__WEBPACK_IMPORTED_MODULE_2__["Position"].AFTERBEGIN;
+      currentView = this.taskEdit;
+    }
+
+    flatpickr__WEBPACK_IMPORTED_MODULE_3___default()(this.taskEdit.getElement().querySelector(`.card__date`), {
+      altInput: true,
+      allowInput: true,
+      defaultDate: this.data.dueDate,
+    });
+
+
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+        if (mode === `DEFAULT`){
+          if (this.container.getElement().contains(this.taskEdit.getElement())){
+            this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+          }
+          else if (mode === `ADDING`){
+            this.container.getElement().removeChild(currentView.getElement())
+          }
+        }
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -4166,13 +4212,8 @@ class TaskController {
           ),
         };
 
-        //Update one task - when replacing, the handler is deleted and the form is not edited
-        // const newTaskTemplate = this.taskEdit.updateTemplate(entry);
-        // const newTaskElement = createElement(newTaskTemplate);
-        // const editTaskElement = this.container.getElement().querySelector(`article#task-edit_${entry.id}`);
-        // this.container.getElement().replaceChild(newTaskElement, editTaskElement);
 
-        this._onDataChange(entry, this.data);
+        this._onDataChange(entry,mode === `DEFAULT` ? this.data : null);
 
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
@@ -4239,13 +4280,7 @@ class TaskController {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
 
-    flatpickr__WEBPACK_IMPORTED_MODULE_3___default()(this.taskEdit.getElement().querySelector(`.card__date`), {
-      altInput: true,
-      allowInput: true,
-      defaultDate: this.data.dueDate,
-    });
-
-    Object(_utils__WEBPACK_IMPORTED_MODULE_2__["render"])(this.container.getElement(), this.taskView.getElement(), _utils__WEBPACK_IMPORTED_MODULE_2__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_2__["render"])(this.container.getElement(), currentView.getElement(), renderPosition);
   }
 
 

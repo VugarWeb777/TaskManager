@@ -29,12 +29,10 @@ class AppController {
     render(this.mainContainer, this.search.getElement(), Position.BEFOREEND);
     render(this.mainContainer, this.filter.getElement(), Position.BEFOREEND);
     render(this.mainContainer, this.statistic.getElement(), Position.BEFOREEND);
-
-    this.boardController = new BoardController(this.mainContainer, tasks);
-
-    this.boardController.init();
-
     this.siteMenu.getElement().addEventListener(`change`, (evt) => this._componentSwitcher(evt));
+
+    this.boardController = new BoardController(this.mainContainer);
+    this.boardController.show(tasks);
   }
 
 
