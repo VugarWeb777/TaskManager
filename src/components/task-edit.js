@@ -1,4 +1,3 @@
-import {createElement} from "../utils";
 import Task from "./task";
 
 class TaskEdit extends Task {
@@ -139,67 +138,8 @@ class TaskEdit extends Task {
   `;
   };
 
-  updateTemplate(newData) {
-    return `<article id="task_${newData.id}" class="card card--${newData.color} ${Object.values(newData.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
-            <div class="card__form">
-              <div class="card__inner">
-                <div class="card__control">
-                  <button type="button" class="card__btn card__btn--edit">
-                    edit
-                  </button>
-                 <button type="button" class="card__btn  card__btn--${newData.isArchive ? `` : `disabled`}">
-                    archive
-                  </button>
-                  <button
-                    type="button"
-                    class="card__btn card__btn--favorites card__btn--${newData.isFavorite ? `` : `disabled`}"
-                  >
-                    favorites
-                  </button>
-                </div>
-
-                <div class="card__color-bar">
-                  <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
-
-                <div class="card__textarea-wrap">
-                  <p class="card__text">${newData.description}</p>
-                </div>
-
-                <div class="card__settings">
-                  <div class="card__details">
-                    <div class="card__dates">
-                      <div class="card__date-deadline">
-                        <p class="card__input-deadline-wrap">
-                          <span class="card__date">${new Date(newData.dueDate).toDateString()}</span>
-                          <span class="card__time">${new Date(newData.dueDate).getHours()} : ${new Date(newData.dueDate).getMinutes()}</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                      ${Array.from(newData.tags).map((tag) => `
-                       <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            ${tag}
-                          </span>
-                        </span>
-                      `).join(``)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>`;
-  };
 
   _subscribeOnEvents() {
-
-    // this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
 
     this.getElement()
       .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
