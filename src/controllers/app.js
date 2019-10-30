@@ -5,6 +5,7 @@ import Statistic from "../components/statistic";
 import {Position, render} from "../utils";
 import BoardController from "./board";
 import {filters, tasks} from "../data";
+import SearchController from "./search";
 
 const ControlId = {
   taskId: `control__task`,
@@ -31,10 +32,21 @@ class AppController {
     render(this.mainContainer, this.statistic.getElement(), Position.BEFOREEND);
     this.siteMenu.getElement().addEventListener(`change`, (evt) => this._componentSwitcher(evt));
 
-    this.boardController = new BoardController(this.mainContainer);
+    this.boardController = new BoardController(this.mainContainer,this._onDataChange);
     this.boardController.show(tasks);
+
+    this.searchController = new SearchController(this.mainContainer,this.search,this.onSearchBackButtonClick.bind(this));
+
+    this.search.getElement().addEventListener(`click`, ()=>{
+      this.statistic.getElement().classList.add(`visually-hidden`);
+      this.boardController.hide();
+      this.searchController.show(tasks);
+    })
   }
 
+  _onDataChange(tasksMocks){
+    tasksMocks = tasks;
+  }
 
   _componentSwitcher(evt){
     if (evt.target.tagName !== `INPUT`) {
@@ -44,16 +56,26 @@ class AppController {
     switch (evt.target.id) {
       case ControlId.taskId:
         this.statistic.getElement().classList.add(`visually-hidden`);
-        this.boardController.show();
+        this.searchController.hide();
+        this.boardController.show(tasks);
         break;
       case ControlId.statisticId:
         this.boardController.hide();
+        this.searchController.hide();
         this.statistic.getElement().classList.remove(`visually-hidden`);
         break;
       case ControlId.newTaskId :
         this.boardController.createTask();
+        this.boardController.show(tasks);
+        this.siteMenu.getElement().querySelector(`#${ControlId.taskId}`).checked = true;
         break;
     }
+  }
+
+  onSearchBackButtonClick(){
+    this.statistic.getElement().classList.add(`visually-hidden`);
+    this.searchController.hide();
+    this.boardController.show(tasks);
   }
 }
 

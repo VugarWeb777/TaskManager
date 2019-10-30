@@ -1,6 +1,5 @@
 import Board from "../components/board";
 import TaskList from "../components/task-list";
-import Search from "../components/search";
 import Filter from "../components/filter";
 import {Position, render, unrendear} from "../utils";
 import {filters} from "../data";
@@ -13,27 +12,26 @@ const TASK_IN_ROW = 8;
 
 class BoardController {
 
-  constructor(container) {
+  constructor(container,onDataChange) {
     this.container = container;
     this.tasks = [];
     this.board = new Board();
     this.taskList = new TaskList();
-    this.search = new Search();
     this.filter = new Filter(filters, this.tasks);
     this.sort = new Sort();
     this.loadMoreButton = new LoadMoreButton();
     this.showedTasks = TASK_IN_ROW;
+    this.onDataChangeMain = onDataChange;
 
     this._taskListController = new TaskListController(this.taskList.getElement(),this._onDataChange.bind(this));
     this.init();
   }
 
+
   init() {
     render(this.container, this.board.getElement(), Position.BEFOREEND);
-    render(this.board.getElement(), this.sort.getElement(),Position.BEFOREEND);
-    render(this.board.getElement(), this.taskList.getElement(),Position.BEFOREEND);
 
-    this.sort.getElement().addEventListener("click", (evt)=> this._onSortLinkClick(evt));
+    this._renderBoard();
   }
 
   hide(){
@@ -41,7 +39,9 @@ class BoardController {
   }
 
   show(tasks){
-    this._setTasks(tasks);
+    if (tasks !== this.tasks){
+      this._setTasks(tasks)
+    }
     this.board.getElement().classList.remove(`visually-hidden`);
   }
 
@@ -49,21 +49,29 @@ class BoardController {
     this._taskListController.createTask();
   }
 
-
-
   _renderBoard(){
+
+    unrendear(this.taskList.getElement());
+    this.taskList.removeElement();
+
     render(this.board.getElement(), this.taskList.getElement(),Position.BEFOREEND);
 
-    unrendear(this.loadMoreButton.getElement());
+    unrendear(this.loadMoreButton);
     this.loadMoreButton.removeElement();
 
-    if (this.showedTasks < this.tasks.length){
-      render(this.board.getElement(), this.loadMoreButton.getElement(),Position.BEFOREEND);
+    if (this.tasks.length) {
+      render(this.board.getElement(), this.taskList.getElement(), Position.BEFOREEND);
+      render(this.board.getElement(), this.sort.getElement(), Position.AFTERBEGIN);
+      render(this.board.getElement(), this.loadMoreButton.getElement(), Position.BEFOREEND);
+
+      this._taskListController.setTasks(this.tasks.slice(0,this.showedTasks));
+      this.loadMoreButton.getElement().addEventListener(`click`, ()=> this._onLoadMore());
+      this.sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
     }
-    this._taskListController.setTasks(this.tasks.slice(0,this.showedTasks));
-    this.loadMoreButton.getElement().addEventListener("click", ()=> {
-      this._onLoadMore();
-    })
+
+    if (this.showedTasks < this.tasks.length){
+      render(this.board.getElement(),this.loadMoreButton.getElement(),Position.BEFOREEND);
+    }
   }
 
   _setTasks(tasks){
@@ -75,6 +83,7 @@ class BoardController {
 
   _onDataChange(tasks){
     this.tasks = tasks;
+    this.onDataChangeMain(this.tasks);
     this._renderBoard();
   }
 
@@ -91,24 +100,24 @@ class BoardController {
   _onSortLinkClick(evt) {
     evt.preventDefault();
 
-    // if (evt.target.tagName !== `A`) {
-    //   return;
-    // }
-    // this.taskList.getElement().innerHTML = ``;
-    //
-    // switch (evt.target.dataset.sortType) {
-    //   case `date-up`:
-    //     const sortedByDateUpTasks = this.tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
-    //     sortedByDateUpTasks.forEach((task) => this._renderTask(task));
-    //     break;
-    //   case `date-down`:
-    //     const sortedByDateDownTasks = this.tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
-    //     sortedByDateDownTasks.forEach((task) => this._renderTask(task));
-    //     break;
-    //   case `default`:
-    //     this.tasks.forEach((task) => this._renderTask(task));
-    //     break;
-    // }
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+    this.taskList.getElement().innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `date-up`:
+        const sortedByDateUpTasks = this.tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
+        this._taskListController.setTasks(sortedByDateUpTasks);
+        break;
+      case `date-down`:
+        const sortedByDateDownTasks = this.tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
+        this._taskListController.setTasks(sortedByDateDownTasks);
+        break;
+      case `default`:
+        this._taskListController.setTasks(this.tasks);
+        break;
+    }
   }
 }
 

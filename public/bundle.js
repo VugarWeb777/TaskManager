@@ -3359,6 +3359,89 @@ class Menu extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
 
 /***/ }),
 
+/***/ "./src/components/search-result-group.js":
+/*!***********************************************!*\
+  !*** ./src/components/search-result-group.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
+
+
+class SearchResultGroup extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  getTemplate() {
+    return `<section class="result__group">
+    <div class="result__cards"></div>
+    <!-- Append tasks here -->
+    </section>`
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SearchResultGroup);
+
+
+/***/ }),
+
+/***/ "./src/components/search-result-info.js":
+/*!**********************************************!*\
+  !*** ./src/components/search-result-info.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
+
+
+class SearchResultInfo extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
+  constructor ({title,count}){
+    super();
+
+    this.title = title;
+    this.count = count;
+  }
+
+  getTemplate() {
+    return `<h2 class="result__title">
+    ${this.title}<span class="result__count">${this.count}</span>
+    </h2>`
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SearchResultInfo);
+
+
+/***/ }),
+
+/***/ "./src/components/search-result.js":
+/*!*****************************************!*\
+  !*** ./src/components/search-result.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
+
+
+class SearchResult extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["default"]{
+  getTemplate() {
+    return `<section class="result container">
+    <button class="result__back">back</button>
+    </section>`
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SearchResult);
+
+
+/***/ }),
+
 /***/ "./src/components/search.js":
 /*!**********************************!*\
   !*** ./src/components/search.js ***!
@@ -3491,22 +3574,11 @@ class Statistic extends _abstract_component__WEBPACK_IMPORTED_MODULE_0__["defaul
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./task */ "./src/components/task.js");
-/* harmony import */ var _abstract_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./abstract-component */ "./src/components/abstract-component.js");
 
 
-
-class TaskEdit extends _abstract_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
-
-  constructor({description,dueDate,repeatingDays,tags,color,isFavorite,isArchive,id}) {
-    super();
-    this.id = id;
-    this.description = description;
-    this.dueDate = new Date(dueDate);
-    this.repeatingDays = repeatingDays;
-    this.tags = [...tags];
-    this.color = color;
-    this.isFavorite = isFavorite;
-    this.isArchive = isArchive;
+class TaskEdit extends _task__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(data) {
+    super(data);
     this._subscribeOnEvents();
   }
 
@@ -3642,67 +3714,8 @@ class TaskEdit extends _abstract_component__WEBPACK_IMPORTED_MODULE_1__["default
   `;
   };
 
-  updateTemplate(newData) {
-    return `<article id="task_${newData.id}" class="card card--${newData.color} ${Object.values(newData.repeatingDays).some((it) => it === true) ? `card--repeat` : ``}">
-            <div class="card__form">
-              <div class="card__inner">
-                <div class="card__control">
-                  <button type="button" class="card__btn card__btn--edit">
-                    edit
-                  </button>
-                 <button type="button" class="card__btn  card__btn--${newData.isArchive ? `` : `disabled`}">
-                    archive
-                  </button>
-                  <button
-                    type="button"
-                    class="card__btn card__btn--favorites card__btn--${newData.isFavorite ? `` : `disabled`}"
-                  >
-                    favorites
-                  </button>
-                </div>
-
-                <div class="card__color-bar">
-                  <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
-
-                <div class="card__textarea-wrap">
-                  <p class="card__text">${newData.description}</p>
-                </div>
-
-                <div class="card__settings">
-                  <div class="card__details">
-                    <div class="card__dates">
-                      <div class="card__date-deadline">
-                        <p class="card__input-deadline-wrap">
-                          <span class="card__date">${new Date(newData.dueDate).toDateString()}</span>
-                          <span class="card__time">${new Date(newData.dueDate).getHours()} : ${new Date(newData.dueDate).getMinutes()}</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                      ${Array.from(newData.tags).map((tag) => `
-                       <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            ${tag}
-                          </span>
-                        </span>
-                      `).join(``)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>`;
-  };
 
   _subscribeOnEvents() {
-
-    // this.getElement().querySelector(`.card__color-input--${this.color}`).checked = true;
 
     this.getElement()
       .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
@@ -3872,6 +3885,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 /* harmony import */ var _board__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./board */ "./src/controllers/board.js");
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../data */ "./src/data.js");
+/* harmony import */ var _search__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./search */ "./src/controllers/search.js");
+
 
 
 
@@ -3907,6 +3922,14 @@ class AppController {
 
     this.boardController = new _board__WEBPACK_IMPORTED_MODULE_5__["default"](this.mainContainer);
     this.boardController.show(_data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
+
+    this.searchController = new _search__WEBPACK_IMPORTED_MODULE_7__["default"](this.mainContainer,this.search,this.onSearchBackButtonClick.bind(this));
+
+    this.search.getElement().addEventListener(`click`, ()=>{
+      this.statistic.getElement().classList.add(`visually-hidden`);
+      this.boardController.hide();
+      this.searchController.show(_data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
+    })
   }
 
 
@@ -3918,16 +3941,26 @@ class AppController {
     switch (evt.target.id) {
       case ControlId.taskId:
         this.statistic.getElement().classList.add(`visually-hidden`);
-        this.boardController.show();
+        this.searchController.hide();
+        this.boardController.show(_data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
         break;
       case ControlId.statisticId:
         this.boardController.hide();
+        this.searchController.hide();
         this.statistic.getElement().classList.remove(`visually-hidden`);
         break;
       case ControlId.newTaskId :
         this.boardController.createTask();
+        this.boardController.show(_data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
+        this.siteMenu.getElement().querySelector(`#${ControlId.taskId}`).checked = true;
         break;
     }
+  }
+
+  onSearchBackButtonClick(){
+    this.statistic.getElement().classList.add(`visually-hidden`);
+    this.searchController.hide();
+    this.boardController.show(_data__WEBPACK_IMPORTED_MODULE_6__["tasks"]);
   }
 }
 
@@ -3947,14 +3980,12 @@ class AppController {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/board */ "./src/components/board.js");
 /* harmony import */ var _components_task_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/task-list */ "./src/components/task-list.js");
-/* harmony import */ var _components_search__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/search */ "./src/components/search.js");
-/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../data */ "./src/data.js");
-/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
-/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
-/* harmony import */ var _task_list__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./task-list */ "./src/controllers/task-list.js");
-
+/* harmony import */ var _components_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/filter */ "./src/components/filter.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../data */ "./src/data.js");
+/* harmony import */ var _components_load_more_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/load-more-button */ "./src/components/load-more-button.js");
+/* harmony import */ var _components_sort__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/sort */ "./src/components/sort.js");
+/* harmony import */ var _task_list__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./task-list */ "./src/controllers/task-list.js");
 
 
 
@@ -3974,20 +4005,19 @@ class BoardController {
     this.tasks = [];
     this.board = new _components_board__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.taskList = new _components_task_list__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    this.search = new _components_search__WEBPACK_IMPORTED_MODULE_2__["default"]();
-    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_3__["default"](_data__WEBPACK_IMPORTED_MODULE_5__["filters"], this.tasks);
-    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_7__["default"]();
-    this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_6__["default"]();
+    this.filter = new _components_filter__WEBPACK_IMPORTED_MODULE_2__["default"](_data__WEBPACK_IMPORTED_MODULE_4__["filters"], this.tasks);
+    this.sort = new _components_sort__WEBPACK_IMPORTED_MODULE_6__["default"]();
+    this.loadMoreButton = new _components_load_more_button__WEBPACK_IMPORTED_MODULE_5__["default"]();
     this.showedTasks = TASK_IN_ROW;
 
-    this._taskListController = new _task_list__WEBPACK_IMPORTED_MODULE_8__["default"](this.taskList.getElement(),this._onDataChange.bind(this));
+    this._taskListController = new _task_list__WEBPACK_IMPORTED_MODULE_7__["default"](this.taskList.getElement(),this._onDataChange.bind(this));
     this.init();
   }
 
   init() {
-    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.sort.getElement(),_utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
-    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.taskList.getElement(),_utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["render"])(this.container, this.board.getElement(), _utils__WEBPACK_IMPORTED_MODULE_3__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["render"])(this.board.getElement(), this.sort.getElement(),_utils__WEBPACK_IMPORTED_MODULE_3__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["render"])(this.board.getElement(), this.taskList.getElement(),_utils__WEBPACK_IMPORTED_MODULE_3__["Position"].BEFOREEND);
 
     this.sort.getElement().addEventListener("click", (evt)=> this._onSortLinkClick(evt));
   }
@@ -3997,7 +4027,9 @@ class BoardController {
   }
 
   show(tasks){
-    this._setTasks(tasks);
+    if (tasks !== this.tasks){
+      this._setTasks(tasks)
+    }
     this.board.getElement().classList.remove(`visually-hidden`);
   }
 
@@ -4008,13 +4040,13 @@ class BoardController {
 
 
   _renderBoard(){
-    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.taskList.getElement(),_utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["render"])(this.board.getElement(), this.taskList.getElement(),_utils__WEBPACK_IMPORTED_MODULE_3__["Position"].BEFOREEND);
 
-    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["unrendear"])(this.loadMoreButton.getElement());
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["unrendear"])(this.loadMoreButton.getElement());
     this.loadMoreButton.removeElement();
 
     if (this.showedTasks < this.tasks.length){
-      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.board.getElement(), this.loadMoreButton.getElement(),_utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_3__["render"])(this.board.getElement(), this.loadMoreButton.getElement(),_utils__WEBPACK_IMPORTED_MODULE_3__["Position"].BEFOREEND);
     }
     this._taskListController.setTasks(this.tasks.slice(0,this.showedTasks));
     this.loadMoreButton.getElement().addEventListener("click", ()=> {
@@ -4039,7 +4071,7 @@ class BoardController {
     this.showedTasks += TASK_IN_ROW;
 
     if (this.showedTasks>= this.tasks.length){
-      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["unrendear"])(this.loadMoreButton.getElement());
+      Object(_utils__WEBPACK_IMPORTED_MODULE_3__["unrendear"])(this.loadMoreButton.getElement());
       this.loadMoreButton.removeElement();
     }
   }
@@ -4070,6 +4102,97 @@ class BoardController {
 
 
 /* harmony default export */ __webpack_exports__["default"] = (BoardController);
+
+
+/***/ }),
+
+/***/ "./src/controllers/search.js":
+/*!***********************************!*\
+  !*** ./src/controllers/search.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_search_result__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/search-result */ "./src/components/search-result.js");
+/* harmony import */ var _components_search_result_info__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/search-result-info */ "./src/components/search-result-info.js");
+/* harmony import */ var _components_search_result_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/search-result-group */ "./src/components/search-result-group.js");
+/* harmony import */ var _task_list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./task-list */ "./src/controllers/task-list.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
+
+
+
+
+class SearchController {
+  constructor(container, search, onBackButtonClick) {
+    this.container = container;
+    this.search = search;
+    this.onBackButtonClick = onBackButtonClick;
+
+    this.tasks = [];
+
+    this.searchResult = new _components_search_result__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.searchResultInfo = new _components_search_result_info__WEBPACK_IMPORTED_MODULE_1__["default"]({});
+    this.searchResultGroup = new _components_search_result_group__WEBPACK_IMPORTED_MODULE_2__["default"]();
+
+    this.taskListController = new _task_list__WEBPACK_IMPORTED_MODULE_3__["default"](this.searchResultGroup.getElement().querySelector(`.result__cards`), this._onDataChange.bind(this));
+    this.init();
+  }
+
+  init() {
+    this.hide();
+
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.container, this.searchResult.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.searchResult.getElement(), this.searchResultGroup.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.searchResultGroup.getElement(), this.searchResultInfo.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].BEFOREEND);
+
+    this.searchResult.getElement().querySelector(`.result__back`).addEventListener(`click`, () => {
+      this.search.getElement().querySelector(`input`).value = ``;
+      this.onBackButtonClick();
+    });
+    this.search.getElement().querySelector(`input`).addEventListener(`keyup`, (evt) => {
+      const {value} = evt.target;
+      const tasks = this.tasks.filter((task) => {
+        return task.description.includes(value);
+      });
+
+      this.showSearchResult(value, tasks);
+    });
+  }
+
+  hide() {
+    this.searchResult.getElement().classList.add(`visually-hidden`);
+  }
+
+  show(tasks) {
+    this.tasks = tasks;
+
+    if (this.searchResult.getElement().classList.contains(`visually-hidden`)) {
+      this.showSearchResult(``, this.tasks);
+      this.searchResult.getElement().classList.remove(`visually-hidden`);
+    }
+  }
+
+  showSearchResult(text, tasks) {
+    if (this.searchResultInfo) {
+      Object(_utils__WEBPACK_IMPORTED_MODULE_4__["unrendear"])(this.searchResultInfo.getElement());
+      this.searchResultInfo.removeElement();
+    }
+    this.searchResultInfo = new _components_search_result_info__WEBPACK_IMPORTED_MODULE_1__["default"]({title: text, count: tasks.length});
+    Object(_utils__WEBPACK_IMPORTED_MODULE_4__["render"])(this.searchResultGroup.getElement(), this.searchResultInfo.getElement(), _utils__WEBPACK_IMPORTED_MODULE_4__["Position"].AFTERBEGIN);
+    this.taskListController.setTasks(tasks);
+  }
+
+  _onDataChange(tasks) {
+    this.tasks = tasks;
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SearchController);
 
 
 /***/ }),
@@ -4216,11 +4339,11 @@ class TaskController{
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         if (mode === `DEFAULT`){
-          if (this.container.getElement().contains(this.taskEdit.getElement())){
-            this.container.getElement().replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+          if (this.container.contains(this.taskEdit.getElement())){
+            this.container.replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
           }
           else if (mode === `ADDING`){
-            this.container.getElement().removeChild(currentView.getElement())
+            this.container.removeChild(currentView.getElement())
           }
         }
         document.removeEventListener(`keydown`, onEscKeyDown);
@@ -4229,7 +4352,7 @@ class TaskController{
 
     this.taskView.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
       this._onChangeView();
-      this.container.getElement().replaceChild(this.taskEdit.getElement(), this.taskView.getElement());
+      this.container.replaceChild(this.taskEdit.getElement(), this.taskView.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
@@ -4338,15 +4461,13 @@ class TaskController{
         document.addEventListener(`keydown`, onEscKeyDown);
       });
 
-    Object(_utils__WEBPACK_IMPORTED_MODULE_2__["render"])(this.container.getElement(), currentView.getElement(), renderPosition);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_2__["render"])(this.container, currentView.getElement(), renderPosition);
   }
 
 
   setDefaultView() {
-    if (this.container.getElement().contains(this.taskEdit.getElement())) {
-      this.container
-        .getElement()
-        .replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
+    if (this.container.contains(this.taskEdit.getElement())) {
+      this.container.replaceChild(this.taskView.getElement(), this.taskEdit.getElement());
     }
   }
 }
